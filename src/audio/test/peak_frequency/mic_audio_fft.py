@@ -16,6 +16,7 @@ HIGH_BIN_CUTOFF=3000
 # Setup a signal handler to catch Ctrl+C to exit the program
 def signal_handler(signal, frame):
     RUN = False
+    sys.exit()
 
 # Register signal handler
 signal.signal(signal.SIGINT, signal_handler)
