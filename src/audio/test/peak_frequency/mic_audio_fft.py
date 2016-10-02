@@ -6,7 +6,7 @@ import numpy
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-CHUNK = 1024
+CHUNK = 512
 RUN = True
 
 # Make these values configurable!
@@ -29,7 +29,7 @@ stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, fra
 while RUN is True:
     # Read audio samples from the audio stream
     data = numpy.fromstring(stream.read(CHUNK), dtype=numpy.int16)
-
+    
     # Take the FFT of the data
     fft = numpy.fft.fft(data)
     fftBins = len(fft)
