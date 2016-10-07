@@ -48,7 +48,6 @@ pip-delete-this-directory.txt
 *.class
 
 # Generated files
-bin/
 gen/
 out/
 
