@@ -1,9 +1,7 @@
-package com.pireworks.app.pireworks;
+package com.pireworks.app.pireworks.adapter;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +9,14 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.pireworks.app.pireworks.R;
+
 import java.util.List;
 
 public class DeviceListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<BluetoothDevice> mData;
-    private OnPairButtonClickListener mListener;
+    private OnDeviceListListener mListener;
 
     public DeviceListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
@@ -26,7 +26,7 @@ public class DeviceListAdapter extends BaseAdapter {
         mData = data;
     }
 
-    public void setListener(OnPairButtonClickListener listener) {
+    public void setListener(OnDeviceListListener listener) {
         mListener = listener;
     }
 
@@ -43,46 +43,59 @@ public class DeviceListAdapter extends BaseAdapter {
     }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
+
+        final BluetoothDevice device = mData.get(position);
+        final boolean isBounded = device.getBondState() == BluetoothDevice.BOND_BONDED;
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView			=  mInflater.inflate(R.layout.list_item_device, null);
+            convertView =  mInflater.inflate(R.layout.list_item_device, null);
 
-            holder 				= new ViewHolder();
+            holder = new ViewHolder();
 
-            holder.nameTv		= (TextView) convertView.findViewById(R.id.tv_name);
-            holder.addressTv 	= (TextView) convertView.findViewById(R.id.tv_address);
-            holder.pairBtn		= (Button) convertView.findViewById(R.id.btn_pair);
+            holder.nameTv = (TextView) convertView.findViewById(R.id.tv_name);
+            holder.addressTv = (TextView) convertView.findViewById(R.id.tv_address);
+            holder.pairBtn = (Button) convertView.findViewById(R.id.btn_pair);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        BluetoothDevice device	= mData.get(position);
-
         holder.nameTv.setText(device.getName());
         holder.addressTv.setText(device.getAddress());
-        holder.pairBtn.setText((device.getBondState() == BluetoothDevice.BOND_BONDED) ? "Unpair" : "Pair");
+        holder.pairBtn.setText(isBounded ? "Unpair" : "Pair");
+
+        // Pair button listener
         holder.pairBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onPairButtonClick(position);
+                    mListener.onPairButtonClick(device);
                 }
             }
         });
 
+        // List item listener
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null && isBounded) {
+                    mListener.onDeviceClick(device);
+                }
+            }
+        });
         return convertView;
     }
 
-    static class ViewHolder {
+    private static class ViewHolder {
         TextView nameTv;
         TextView addressTv;
         TextView pairBtn;
     }
 
-    public interface OnPairButtonClickListener {
-        public abstract void onPairButtonClick(int position);
+    public interface OnDeviceListListener {
+        void onDeviceClick(BluetoothDevice device);
+        void onPairButtonClick(BluetoothDevice device);
     }
 }

@@ -3,8 +3,8 @@
     package="com.pireworks.app.pireworks">
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="19" />
+        android:minSdkVersion="19"
+        android:targetSdkVersion="23" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -17,8 +17,9 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.pireworks.app.pireworks.Pireworks"
-            android:label="@string/app_name" >
+            android:name="com.pireworks.app.pireworks.HomeActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +31,8 @@
 
         <activity
             android:name=".DeviceListActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

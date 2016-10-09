@@ -19,7 +19,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class Pireworks extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     private TextView mStatusTv;
     private Button mActivateBtn;
@@ -36,16 +36,16 @@ public class Pireworks extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_pireworks);
+        setContentView(R.layout.activity_home);
 
-        mStatusTv 			= (TextView) findViewById(R.id.tv_status);
-        mActivateBtn 		= (Button) findViewById(R.id.btn_enable);
-        mPairedBtn 			= (Button) findViewById(R.id.btn_view_paired);
-        mScanBtn 			= (Button) findViewById(R.id.btn_scan);
+        mStatusTv = (TextView) findViewById(R.id.tv_status);
+        mActivateBtn= (Button) findViewById(R.id.btn_enable);
+        mPairedBtn = (Button) findViewById(R.id.btn_view_paired);
+        mScanBtn = (Button) findViewById(R.id.btn_scan);
 
-        mBluetoothAdapter	= BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        mProgressDlg 		= new ProgressDialog(this);
+        mProgressDlg = new ProgressDialog(this);
 
         mProgressDlg.setMessage("Scanning...");
         mProgressDlg.setCancelable(false);
@@ -73,7 +73,7 @@ public class Pireworks extends AppCompatActivity {
 
                         list.addAll(pairedDevices);
 
-                        Intent intent = new Intent(Pireworks.this, DeviceListActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, DeviceListActivity.class);
 
                         intent.putParcelableArrayListExtra("device.list", list);
 
@@ -194,7 +194,7 @@ public class Pireworks extends AppCompatActivity {
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 mProgressDlg.dismiss();
 
-                Intent newIntent = new Intent(Pireworks.this, DeviceListActivity.class);
+                Intent newIntent = new Intent(HomeActivity.this, DeviceListActivity.class);
 
                 newIntent.putParcelableArrayListExtra("device.list", mDeviceList);
 

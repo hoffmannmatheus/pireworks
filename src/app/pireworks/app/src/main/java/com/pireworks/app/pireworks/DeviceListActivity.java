@@ -6,15 +6,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.pireworks.app.pireworks.adapter.DeviceListAdapter;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-public class DeviceListActivity extends Activity {
+public class DeviceListActivity extends Activity implements DeviceListAdapter.OnDeviceListListener {
     private ListView mListView;
     private DeviceListAdapter mAdapter;
     private ArrayList<BluetoothDevice> mDeviceList;
@@ -25,27 +26,12 @@ public class DeviceListActivity extends Activity {
 
         setContentView(R.layout.activity_paired_devices);
 
-        mDeviceList		= getIntent().getExtras().getParcelableArrayList("device.list");
-
-        mListView		= (ListView) findViewById(R.id.lv_paired);
-
-        mAdapter		= new DeviceListAdapter(this);
+        mDeviceList	= getIntent().getExtras().getParcelableArrayList("device.list");
+        mListView = (ListView) findViewById(R.id.lv_paired);
+        mAdapter = new DeviceListAdapter(this);
 
         mAdapter.setData(mDeviceList);
-        mAdapter.setListener(new DeviceListAdapter.OnPairButtonClickListener() {
-            @Override
-            public void onPairButtonClick(int position) {
-                BluetoothDevice device = mDeviceList.get(position);
-
-                if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
-                    unpairDevice(device);
-                } else {
-                    showToast("Pairing...");
-
-                    pairDevice(device);
-                }
-            }
-        });
+        mAdapter.setListener(this);
 
         mListView.setAdapter(mAdapter);
 
@@ -101,4 +87,24 @@ public class DeviceListActivity extends Activity {
             }
         }
     };
+
+    @Override
+    public void onDeviceClick(BluetoothDevice device) {
+        if (device == null) {
+            return;
+        }
+        Toast.makeText(this, "Clicked! " + device.getName(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onPairButtonClick(BluetoothDevice device) {
+
+        if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
+            unpairDevice(device);
+        } else {
+            showToast("Pairing...");
+
+            pairDevice(device);
+        }
+    }
 }
