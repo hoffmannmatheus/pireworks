@@ -12,5 +12,5 @@ sudo service bluetooth start
 sudo sdptool add SP
 sudo hciconfig hci0 piscan
 
-~/pireworks/src/common/watch_dog.sh sudo python ~/pireworks/src/backend/src/server.py
+sudo /home/pi/pireworks/src/common/watchdog.sh python /home/pi/pireworks/src/backend/src/server.py
 

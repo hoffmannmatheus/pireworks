@@ -6,4 +6,4 @@ sudo pip install bluez
 sudo bash -c "echo 'PRETTY_HOSTNAME=Pireworks' > /etc/machine-info"
 
 chmod +x ~/pireworks/src/backend/bin/run.sh
-echo "~/pireworks/src/backend/bin/run.sh" >> ~/.bashrc
+echo "sudo /home/pi/pireworks/src/backend/bin/run.sh &" >> ~/.bashrc
