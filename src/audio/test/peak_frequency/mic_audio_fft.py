@@ -3,75 +3,73 @@ import signal
 import sys
 import numpy
 
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RUN = True
 
-# Make these values configurable!
-LOW_BIN_CUTOFF=800
-HIGH_BIN_CUTOFF=3000
-TRIGGER_THRESHOLD=10000
-RATE = 44100
-CHUNK = 512
+def mic_audio_process(LOW_BIN_CUTOFF=800,HIGH_BIN_CUTOFF=3000,TRIGGER_THRESHOLD=10000,RATE = 44100, CHUNK = 512):
+    FORMAT = pyaudio.paInt16
+    CHANNELS = 1
+    RUN = True
 
 # Setup a signal handler to catch Ctrl+C to exit the program
-def signal_handler(signal, frame):
-    RUN = False
-    sys.exit()
+    def signal_handler(signal, frame):
+        RUN = False
+        sys.exit()
 
 # Register signal handler
-signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
 
 # Open PyAudio
-audio = pyaudio.PyAudio()
+    audio = pyaudio.PyAudio()
 
 # Open an audio stream from the mic input
-stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
+    stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
 
-while RUN is True:
-    # Read audio samples from the audio stream
-    data = numpy.fromstring(stream.read(CHUNK), dtype=numpy.int16)
-    
-    # Take the FFT of the data
-    fft = numpy.fft.fft(data)
-    fftBins = len(fft)
+    while RUN is True:
+        # Read audio samples from the audio stream
+        data = numpy.fromstring(stream.read(CHUNK), dtype=numpy.int16)
 
-    # Obtain the sample frequencies that correspond to the FFT samples
-    freqs = numpy.fft.fftfreq(fftBins)
+        # Take the FFT of the data
+        fft = numpy.fft.fft(data)
+        fftBins = len(fft)
 
-    # Sort the data based on provided cutoff values
-    binResolution = RATE / fftBins
+        # Obtain the sample frequencies that correspond to the FFT samples
+        freqs = numpy.fft.fftfreq(fftBins)
 
-    lowBinIndex = int(LOW_BIN_CUTOFF / binResolution)
-    highBinIndex = int(HIGH_BIN_CUTOFF / binResolution)
+        # Sort the data based on provided cutoff values
+        binResolution = RATE / fftBins
 
-    # Find the peak frequencies and magnitudes
-    lowPeakIndex = numpy.argmax(numpy.abs(fft[1:lowBinIndex]))
-    lowPeakValue = numpy.abs(fft[lowPeakIndex])
+        lowBinIndex = int(LOW_BIN_CUTOFF / binResolution)
+        highBinIndex = int(HIGH_BIN_CUTOFF / binResolution)
 
-    midPeakIndex = numpy.argmax(numpy.abs(fft[lowBinIndex + 1:highBinIndex]))
-    midPeakValue = numpy.abs(fft[lowBinIndex + 1 + midPeakIndex])
+        # Find the peak frequencies and magnitudes
+        lowPeakIndex = numpy.argmax(numpy.abs(fft[1:lowBinIndex]))
+        lowPeakValue = numpy.abs(fft[lowPeakIndex])
 
-    highPeakIndex = numpy.argmax(numpy.abs(fft[highBinIndex + 1:highBinIndex + 1 + (highBinIndex - lowBinIndex)]))
-    highPeakValue = numpy.abs(fft[highBinIndex + 1 + highPeakIndex])
+        midPeakIndex = numpy.argmax(numpy.abs(fft[lowBinIndex + 1:highBinIndex]))
+        midPeakValue = numpy.abs(fft[lowBinIndex + 1 + midPeakIndex])
 
-    # Convert the sample frequencies into the actual frequencies
-    lowPeakFreq = abs(freqs[lowPeakIndex] * RATE)
-    midPeakFreq = abs(freqs[lowBinIndex + midPeakIndex] * RATE)
-    highPeakFreq = abs(freqs[highBinIndex + highPeakIndex] * RATE)
+        highPeakIndex = numpy.argmax(numpy.abs(fft[highBinIndex + 1:highBinIndex + 1 + (highBinIndex - lowBinIndex)]))
+        highPeakValue = numpy.abs(fft[highBinIndex + 1 + highPeakIndex])
 
-    red = lowPeakValue >= TRIGGER_THRESHOLD
-    green = midPeakValue >= TRIGGER_THRESHOLD
-    blue = highPeakValue >= TRIGGER_THRESHOLD
+        # Convert the sample frequencies into the actual frequencies
+        lowPeakFreq = abs(freqs[lowPeakIndex] * RATE)
+        midPeakFreq = abs(freqs[lowBinIndex + midPeakIndex] * RATE)
+        highPeakFreq = abs(freqs[highBinIndex + highPeakIndex] * RATE)
 
-    # This is where to call the light module
-    print("%d%d%d" % (red, green, blue))
+        red = lowPeakValue >= TRIGGER_THRESHOLD
+        green = midPeakValue >= TRIGGER_THRESHOLD
+        blue = highPeakValue >= TRIGGER_THRESHOLD
 
-    # Debug prints
-    #print("- freq -\nlow = %d\nmid = %d\nhigh = %d\n" % (lowPeakFreq, midPeakFreq, highPeakFreq))
-    #print("- value -\nlow = %d\nmid = %d\nhigh = %d\n" % (lowPeakValue, midPeakValue, highPeakValue))
+        # This is where to call the light module
+        print("%d%d%d" % (red, green, blue))
 
-# Cleanup
-stream.stop_stream()
-stream.close()
-audio.terminate()
+        # Debug prints
+        #print("- freq -\nlow = %d\nmid = %d\nhigh = %d\n" % (lowPeakFreq, midPeakFreq, highPeakFreq))
+        #print("- value -\nlow = %d\nmid = %d\nhigh = %d\n" % (lowPeakValue, midPeakValue, highPeakValue))
+
+    # Cleanup
+    stream.stop_stream()
+    stream.close()
+    audio.terminate()
+
+#Call function here
+mic_audio_process(800,3000,10000,44100, 512)
