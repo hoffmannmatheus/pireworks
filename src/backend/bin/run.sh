@@ -1,7 +1,5 @@
 #/bin/bash
 
-cd ../src/
-
 # Notes:
 # Might need to edit file via "sudo vim /lib/systemd/system/bluetooth.service"
 # Add --compat to line "ExecStart=/usr/lib/bluetooth/bluetoothd
@@ -13,4 +11,6 @@ cd ../src/
 sudo service bluetooth start
 sudo sdptool add SP
 sudo hciconfig hci0 piscan
-sudo python server.sh
+
+~/pireworks/src/common/watch_dog.sh sudo python ~/pireworks/src/backend/src/server.py
+
