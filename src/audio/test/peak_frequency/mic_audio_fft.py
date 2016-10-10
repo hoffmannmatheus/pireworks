@@ -5,13 +5,14 @@ import numpy
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
-RATE = 44100
-CHUNK = 512
 RUN = True
 
 # Make these values configurable!
-LOW_BIN_CUTOFF=1000
+LOW_BIN_CUTOFF=800
 HIGH_BIN_CUTOFF=3000
+TRIGGER_THRESHOLD=10000
+RATE = 44100
+CHUNK = 512
 
 # Setup a signal handler to catch Ctrl+C to exit the program
 def signal_handler(signal, frame):
@@ -39,22 +40,36 @@ while RUN is True:
     freqs = numpy.fft.fftfreq(fftBins)
 
     # Sort the data based on provided cutoff values
-    binResolution = (RATE / 2) / fftBins
+    binResolution = RATE / fftBins
 
     lowBinIndex = int(LOW_BIN_CUTOFF / binResolution)
     highBinIndex = int(HIGH_BIN_CUTOFF / binResolution)
 
-    # Find the peak frequencies (Sample the same number of frequencies per bin)
-    lowPeakIndex = numpy.argmax(numpy.abs(fft[:lowBinIndex - 1]))
-    midPeakIndex = numpy.argmax(numpy.abs(fft[lowBinIndex:highBinIndex - 1]))
-    highPeakIndex = numpy.argmax(numpy.abs(fft[highBinIndex:highBinIndex + (highBinIndex - lowBinIndex)]))
+    # Find the peak frequencies and magnitudes
+    lowPeakIndex = numpy.argmax(numpy.abs(fft[1:lowBinIndex]))
+    lowPeakValue = numpy.abs(fft[lowPeakIndex])
+
+    midPeakIndex = numpy.argmax(numpy.abs(fft[lowBinIndex + 1:highBinIndex]))
+    midPeakValue = numpy.abs(fft[lowBinIndex + 1 + midPeakIndex])
+
+    highPeakIndex = numpy.argmax(numpy.abs(fft[highBinIndex + 1:highBinIndex + 1 + (highBinIndex - lowBinIndex)]))
+    highPeakValue = numpy.abs(fft[highBinIndex + 1 + highPeakIndex])
 
     # Convert the sample frequencies into the actual frequencies
     lowPeakFreq = abs(freqs[lowPeakIndex] * RATE)
     midPeakFreq = abs(freqs[lowBinIndex + midPeakIndex] * RATE)
     highPeakFreq = abs(freqs[highBinIndex + highPeakIndex] * RATE)
 
-    print("low = %d mid = %d high = %d" % (lowPeakFreq, midPeakFreq, highPeakFreq))
+    red = lowPeakValue >= TRIGGER_THRESHOLD
+    green = midPeakValue >= TRIGGER_THRESHOLD
+    blue = highPeakValue >= TRIGGER_THRESHOLD
+
+    # This is where to call the light module
+    print("%d%d%d" % (red, green, blue))
+
+    # Debug prints
+    #print("- freq -\nlow = %d\nmid = %d\nhigh = %d\n" % (lowPeakFreq, midPeakFreq, highPeakFreq))
+    #print("- value -\nlow = %d\nmid = %d\nhigh = %d\n" % (lowPeakValue, midPeakValue, highPeakValue))
 
 # Cleanup
 stream.stop_stream()
