@@ -74,9 +74,7 @@ public class HomeActivity extends AppCompatActivity {
                         list.addAll(pairedDevices);
 
                         Intent intent = new Intent(HomeActivity.this, DeviceListActivity.class);
-
-                        intent.putParcelableArrayListExtra("device.list", list);
-
+                        intent.putParcelableArrayListExtra(DeviceListActivity.EXTRA_DEVICE_LIST, list);
                         startActivity(intent);
                     }
                 }
@@ -98,7 +96,6 @@ public class HomeActivity extends AppCompatActivity {
                         showDisabled();
                     } else {
                         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-
                         startActivityForResult(intent, 1000);
                     }
                 }
@@ -195,9 +192,7 @@ public class HomeActivity extends AppCompatActivity {
                 mProgressDlg.dismiss();
 
                 Intent newIntent = new Intent(HomeActivity.this, DeviceListActivity.class);
-
-                newIntent.putParcelableArrayListExtra("device.list", mDeviceList);
-
+                newIntent.putParcelableArrayListExtra(DeviceListActivity.EXTRA_DEVICE_LIST, mDeviceList);
                 startActivity(newIntent);
             } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);

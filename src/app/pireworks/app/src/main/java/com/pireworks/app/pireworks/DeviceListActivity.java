@@ -16,6 +16,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class DeviceListActivity extends Activity implements DeviceListAdapter.OnDeviceListListener {
+
+    public static final String EXTRA_DEVICE_LIST = "bluetooth_device_list";
+
     private ListView mListView;
     private DeviceListAdapter mAdapter;
     private ArrayList<BluetoothDevice> mDeviceList;
@@ -26,7 +29,7 @@ public class DeviceListActivity extends Activity implements DeviceListAdapter.On
 
         setContentView(R.layout.activity_paired_devices);
 
-        mDeviceList	= getIntent().getExtras().getParcelableArrayList("device.list");
+        mDeviceList	= getIntent().getExtras().getParcelableArrayList(EXTRA_DEVICE_LIST);
         mListView = (ListView) findViewById(R.id.lv_paired);
         mAdapter = new DeviceListAdapter(this);
 
@@ -93,7 +96,9 @@ public class DeviceListActivity extends Activity implements DeviceListAdapter.On
         if (device == null) {
             return;
         }
-        Toast.makeText(this, "Clicked! " + device.getName(), Toast.LENGTH_LONG).show();
+        Intent newIntent = new Intent(this, PireworksActivity.class);
+        newIntent.putExtra(PireworksActivity.EXTRA_DEVICE, device);
+        startActivity(newIntent);
     }
 
     @Override

@@ -18,6 +18,9 @@
     <string name="text_list_paired_devices">Paired Devices</string>
     <string name="text_list_devices">List of Devices</string>
 
+    <string name="pireworks_send_text">Send Message</string>
+    <string name="pireworks_received_text">Messages:</string>
+
     <string name="text_pair">Pair</string>
 
 </resources>
