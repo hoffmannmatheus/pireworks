@@ -6,7 +6,7 @@ LOW_BIN_CUTOFF = 800
 HIGH_BIN_CUTOFF = 3000
 TRIGGER_THRESHOLD = 10000
 RATE = 44100
-CHUNK = 1024
+CHUNK = 512
 
 class AudioInput(Thread):
     """This is the audio input processing thread."""
