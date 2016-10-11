@@ -6,7 +6,6 @@ CUTOFF_FREQS = [800, 1500, 3000]
 TRIGGER_THRESHOLD = 10000
 RATE = 44100
 CHUNK = 512
-UPPER_BOUND = 5000
 
 class AudioInput(Thread):
     """This is the audio input processing thread."""
@@ -62,7 +61,8 @@ class AudioInput(Thread):
                     peak_values.append(0)
 
             # The last bin
-            fft_index = numpy.argmax(numpy.abs(fft[indicies[-1]:indicies[-1] + UPPER_BOUND]))
+            upper_bound = int((len(fft) - indicies[-1]) / 2)
+            fft_index = numpy.argmax(numpy.abs(fft[indicies[-1]:upper_bound]))
             fft_value = numpy.abs(fft[indicies[-1] + fft_index])
 
             if fft_value > self.trigger_threshold:
