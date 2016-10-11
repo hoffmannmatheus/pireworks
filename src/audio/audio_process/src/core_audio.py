@@ -1,8 +1,6 @@
-import pyaudio
-import signal
-import sys
-import numpy
 from threading import Thread
+import pyaudio
+import numpy
 
 LOW_BIN_CUTOFF = 800
 HIGH_BIN_CUTOFF = 3000
@@ -114,7 +112,7 @@ class CoreAudio():
         """Delete registered callback function"""
         self.callback = None
 
-    def configure(self, 
+    def configure(self,
                   low_cutoff=LOW_BIN_CUTOFF,
                   high_cutoff=HIGH_BIN_CUTOFF,
                   trigger_threshold=TRIGGER_THRESHOLD,
