@@ -2,9 +2,9 @@ from core_audio import CoreAudio
 from time import sleep
 
 # Define a function to take the stream output
-def CallbackFunction(red, green, blue):
+def CallbackFunction(values):
     """My simple callback function"""
-    print("%d%d%d" % (red, green, blue))
+    print(values)
 
 # Create the audio class
 audio = CoreAudio()

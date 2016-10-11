@@ -2,20 +2,19 @@ from threading import Thread
 import pyaudio
 import numpy
 
-LOW_BIN_CUTOFF = 800
-HIGH_BIN_CUTOFF = 3000
+CUTOFF_FREQS = [800, 1500, 3000]
 TRIGGER_THRESHOLD = 10000
 RATE = 44100
 CHUNK = 512
+UPPER_BOUND = 5000
 
 class AudioInput(Thread):
     """This is the audio input processing thread."""
-    def __init__(self, stream, callback, low_cutoff, high_cutoff, trigger_threshold, rate, chunk):
+    def __init__(self, stream, callback, cutoff_freqs, trigger_threshold, rate, chunk):
         Thread.__init__(self)
         self.stream = stream
         self.callback = callback
-        self.low_cutoff = low_cutoff
-        self.high_cutoff = high_cutoff
+        self.cutoff_freqs = cutoff_freqs
         self.trigger_threshold = trigger_threshold
         self.rate = rate
         self.chunk_size = chunk
@@ -35,46 +34,43 @@ class AudioInput(Thread):
             fft = numpy.fft.fft(data)
             fft_bins = len(fft)
 
-            # Sort the data based on provided cutoff values
+            # Bin the data based on provided cutoff values
             bin_resolution = self.rate / fft_bins
 
-            low_bin_index = int(self.low_cutoff / bin_resolution)
-            high_bin_index = int(self.high_cutoff / bin_resolution)
-
-            bin_width = high_bin_index - low_bin_index
+            indicies = []
+            for freq in self.cutoff_freqs:
+                indicies.append(int(freq / bin_resolution))
 
             # Find the peak frequencies and magnitudes
-            low_peak_index = numpy.argmax(numpy.abs(fft[:low_bin_index]))
-            low_peak_value = numpy.abs(fft[low_peak_index])
+            peak_values = []
+            for index, value in enumerate(indicies):
+                fft_index = 0
+                if index is 0:
+                    fft_index = numpy.argmax(numpy.abs(fft[:value]))
+                else:
+                    fft_index = numpy.argmax(numpy.abs(fft[indicies[index - 1]:value]))
 
-            mid_peak_index = numpy.argmax(numpy.abs(fft[low_bin_index:high_bin_index]))
-            mid_peak_value = numpy.abs(fft[low_bin_index + mid_peak_index])
+                fft_value = 0
+                if index is 0:
+                    fft_value = numpy.abs(fft[fft_index])
+                else:
+                    fft_value = numpy.abs(fft[indicies[index - 1] + fft_index])
 
-            high_peak_index = numpy.argmax(numpy.abs(fft[high_bin_index:high_bin_index + bin_width]))
-            high_peak_value = numpy.abs(fft[high_bin_index + high_peak_index])
+                if fft_value > self.trigger_threshold:
+                    peak_values.append(1)
+                else:
+                    peak_values.append(0)
 
-            red = low_peak_value >= self.trigger_threshold
-            green = mid_peak_value >= self.trigger_threshold
-            blue = high_peak_value >= self.trigger_threshold
+            # The last bin
+            fft_index = numpy.argmax(numpy.abs(fft[indicies[-1]:indicies[-1] + UPPER_BOUND]))
+            fft_value = numpy.abs(fft[indicies[-1] + fft_index])
 
-            self.callback(red, green, blue)
+            if fft_value > self.trigger_threshold:
+                peak_values.append(1)
+            else:
+                peak_values.append(0)
 
-            # Debug prints
-
-            # Obtain the sample frequencies that correspond to the FFT samples
-            #freqs = numpy.fft.fftfreq(fft_bins)
-
-            # Convert the sample frequencies into the actual frequencies
-            #low_peak_freq = abs(freqs[low_peak_index] * self.rate)
-            #mid_peak_freq = abs(freqs[low_bin_index + mid_peak_index] * self.rate)
-            #high_peak_freq = abs(freqs[high_bin_index + high_peak_index] * self.rate)
-
-            # Print the output
-            #print("%d%d%d" % (red, green, blue))
-            #print("- freq -\nlow = %d\nmid = %d\nhigh = %d\n" %
-            #     (low_peak_freq, mid_peak_freq, high_peak_freq))
-            #print("- value -\nlow = %d\nmid = %d\nhigh = %d\n" %
-            #     (low_peak_value, mid_peak_value, high_peak_value))
+            self.callback(peak_values)
 
 class CoreAudio():
     """This class controls the audio processing thread
@@ -95,8 +91,7 @@ class CoreAudio():
         self.channels = 1
         self.run = True
         self.callback = None
-        self.low_cutoff = LOW_BIN_CUTOFF
-        self.high_cutoff = HIGH_BIN_CUTOFF
+        self.cutoff_freqs = CUTOFF_FREQS
         self.trigger_threshold = TRIGGER_THRESHOLD
         self.rate = RATE
         self.chunk_size = CHUNK
@@ -113,14 +108,12 @@ class CoreAudio():
         self.callback = None
 
     def configure(self,
-                  low_cutoff=LOW_BIN_CUTOFF,
-                  high_cutoff=HIGH_BIN_CUTOFF,
+                  cutoff_freqs=CUTOFF_FREQS,
                   trigger_threshold=TRIGGER_THRESHOLD,
                   rate=RATE,
                   chunk_size=CHUNK):
         """Configure the audio parameters"""
-        self.low_cutoff = low_cutoff
-        self.high_cutoff = high_cutoff
+        self.cutoff_freqs = cutoff_freqs
         self.trigger_threshold = trigger_threshold
         self.rate = rate
         self.chunk_size = chunk_size
@@ -134,8 +127,7 @@ class CoreAudio():
                                       frames_per_buffer=self.chunk_size)
         self.thread = AudioInput(self.stream,
                                  self.callback,
-                                 self.low_cutoff,
-                                 self.high_cutoff,
+                                 self.cutoff_freqs,
                                  self.trigger_threshold,
                                  self.rate,
                                  self.chunk_size)
