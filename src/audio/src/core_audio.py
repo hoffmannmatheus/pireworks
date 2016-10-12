@@ -2,13 +2,14 @@ from threading import Thread
 import pyaudio
 import numpy
 
+# See below for descriptions of these values
 CUTOFF_FREQS = [800, 1500, 3000]
 TRIGGER_THRESHOLD = 10000
 RATE = 44100
-CHUNK = 512
+CHUNK = 1024
 
 class AudioInput(Thread):
-    """This is the audio input processing thread."""
+    """The audio input processing thread"""
     def __init__(self, stream, callback, cutoff_freqs, trigger_threshold, rate, chunk):
         Thread.__init__(self)
         self.stream = stream
@@ -100,7 +101,13 @@ class CoreAudio():
         self.thread = None
 
     def register(self, callback):
-        """Register a callback function"""
+        """Register a callback function
+        Parameters
+        ----------
+        callback : function
+            The callback function accepting a list of values indicating
+            if a signal is present within the given "bin"
+        """
         self.callback = callback
 
     def deregister(self):
@@ -108,11 +115,37 @@ class CoreAudio():
         self.callback = None
 
     def configure(self,
-                  cutoff_freqs=CUTOFF_FREQS,
+                  cutoff_freqs=None,
                   trigger_threshold=TRIGGER_THRESHOLD,
                   rate=RATE,
                   chunk_size=CHUNK):
-        """Configure the audio parameters"""
+        """Configure the audio parameters
+        Parameters
+        ----------
+        cutoff_freqs : list of int
+            A list of frequences to divide the input samples.
+            Value must be within the range of 20-22,000 Hz
+        trigger_threshold : int
+            The magnitude of signal needed to produce a "ON" signal
+        rate : int
+            The sampling rate in Hz. Modification of this value should
+            correspond to hardware configuration changes. Currently only support 44.1 kHz
+        chunk_size : int
+            The number of samples processed per loop. Only adjust if
+            buffer underflows are detected.
+        """
+        if cutoff_freqs is None:
+            cutoff_freqs = CUTOFF_FREQS
+        else:
+            # Remove duplicates and sort
+            cutoff_freqs = sorted(set(cutoff_freqs))
+
+        if max(cutoff_freqs) > 22000:
+            raise ValueError("Invalid cutoff frequency, must be below 22000")
+
+        if rate != 44100:
+            raise ValueError("Invalid rate frequency, must be 44100")
+
         self.cutoff_freqs = cutoff_freqs
         self.trigger_threshold = trigger_threshold
         self.rate = rate
@@ -135,12 +168,12 @@ class CoreAudio():
 
     def stop(self):
         """Stop audio processing"""
-        try:
+        if self.thread is not None:
             self.thread.stop()
+
+        if self.stream is not None:
             self.stream.stop_stream()
             self.stream.close()
-        except:
-            pass
 
         self.stream = None
         self.thread = None
