@@ -6,7 +6,7 @@ import numpy
 CUTOFF_FREQS = [800, 1500, 3000]
 TRIGGER_THRESHOLD = 10000
 RATE = 44100
-CHUNK = 1024
+CHUNK = 512
 
 class AudioInput(Thread):
     """The audio input processing thread"""
