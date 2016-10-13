@@ -1,18 +1,20 @@
 from threading import Thread
 import pyaudio
 import numpy
+import wave
 
 # See below for descriptions of these values
 CUTOFF_FREQS = [800, 1500, 3000]
-TRIGGER_THRESHOLD = 10000
+TRIGGER_THRESHOLD = 150000
 RATE = 44100
 CHUNK = 512
 
 class AudioInput(Thread):
     """The audio input processing thread"""
-    def __init__(self, stream, callback, cutoff_freqs, trigger_threshold, rate, chunk):
+    def __init__(self, stream, wave, callback, cutoff_freqs, trigger_threshold, rate, chunk):
         Thread.__init__(self)
         self.stream = stream
+        self.wave = wave
         self.callback = callback
         self.cutoff_freqs = cutoff_freqs
         self.trigger_threshold = trigger_threshold
@@ -27,8 +29,15 @@ class AudioInput(Thread):
     def run(self):
         """The thread function"""
         while self.running is True:
-            # Read audio samples from the audio stream
-            data = numpy.fromstring(self.stream.read(self.chunk_size), dtype=numpy.int16)
+            if wave is None:
+                # Read audio samples from the audio stream
+                data = numpy.fromstring(self.stream.read(self.chunk_size), dtype=numpy.int16)
+            else:
+                # Read audio samples from input file
+                if self.wave.tell() >= self.wave.getnframes():
+                    self.wave.rewind()
+
+                data = numpy.fromstring(self.wave.readframes(self.chunk_size), dtype=numpy.int16)
 
             # Take the FFT of the data
             fft = numpy.fft.fft(data)
@@ -86,8 +95,12 @@ class CoreAudio():
     1. Invoke the stop() operation
     2. Configure the desired paramters via the configure() operation
     3. Invoke the start() operation
+    Parameters
+    ----------
+    file : string
+        If a file is present an attempt will be made to open and use as input
     """
-    def __init__(self):
+    def __init__(self, file=None):
         self.format = pyaudio.paInt16
         self.channels = 1
         self.run = True
@@ -99,6 +112,15 @@ class CoreAudio():
         self.audio = pyaudio.PyAudio()
         self.stream = None
         self.thread = None
+
+        if file != None:
+            try:
+                self.wave = wave.open(file, 'rb')
+            except:
+                self.wave = None
+        else:
+            self.wave = None
+
 
     def register(self, callback):
         """Register a callback function
@@ -158,12 +180,15 @@ class CoreAudio():
                                       rate=self.rate,
                                       input=True,
                                       frames_per_buffer=self.chunk_size)
+      
         self.thread = AudioInput(self.stream,
+                                 self.wave,
                                  self.callback,
                                  self.cutoff_freqs,
                                  self.trigger_threshold,
                                  self.rate,
                                  self.chunk_size)
+
         self.thread.start()
 
     def stop(self):

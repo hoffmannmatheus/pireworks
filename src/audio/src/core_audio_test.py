@@ -7,7 +7,7 @@ def CallbackFunction(values):
     print(values)
 
 # Create the audio class
-audio = CoreAudio()
+audio = CoreAudio("audio_sweep.wav")
 
 # Register your callback
 audio.register(CallbackFunction)
