@@ -1,12 +1,14 @@
 from threading import Thread
 import pyaudio
 import numpy
+import RPi.GPIO as GPIO
 
 # See below for descriptions of these values
-CUTOFF_FREQS = [800, 1500, 3000]
+CUTOFF_FREQS = [1000, 2000]
 TRIGGER_THRESHOLD = 10000
 RATE = 44100
 CHUNK = 512
+GPIO_SETUP=[29,31,33,35,37,15,36,38,40]
 
 class AudioInput(Thread):
     """The audio input processing thread"""
@@ -177,3 +179,28 @@ class CoreAudio():
 
         self.stream = None
         self.thread = None
+
+		
+class GPIO_Process():
+    def __init__(self,value):
+	    self.gpio_setup=GPIO_SETUP
+	    self.gpio_values=values
+		
+	def gpio_configure(self):
+	#setup GPIO port and configuration
+	    GPIO.setmode(GPIO.BOARD)
+        for gpio_num in self.gpio_setup:
+            GPIO.setup(gpio_num,GPIO,OUT)
+            GPIO.output(gpio_num,1)
+	
+	def gpio_output(self):
+	#output signal to led
+        for gpio_num in self.gpio_setup:
+            GPIO.output(gpio_num,int(self.values[0])
+            GPIO.output(gpio_num,int(self.values[1])
+            GPIO.output(gpio_num,int(self.values[2])
+	
+    def gpio_clean(self):
+	#clean up gpio signal
+		GPIO.cleanup()
+    

@@ -1,47 +1,27 @@
-import RPi.GPIO as GPIO
-from core_audio_old import CoreAudio
+from core_audio_old import CoreAudio,GPIO_Process
 from time import sleep
+import threading
 
-# Define a function to take the stream output
-def CallbackFunction(values):
-    """My simple callback function"""
-    GPIO.setmode(GPIO.BOARD)
+threads=[]
+values_list=[]
 
-    GPIO.setup(29, GPIO.OUT)
-    GPIO.output(29,1)
-    GPIO.setup(31, GPIO.OUT)
-    GPIO.output(31,1)
-    GPIO.setup(33, GPIO.OUT)
-    GPIO.output(33,1)
-    GPIO.setup(35, GPIO.OUT)
-    GPIO.output(35,1)
-    GPIO.setup(37, GPIO.OUT)
-    GPIO.output(37,1)
-    GPIO.setup(15, GPIO.OUT)
-    GPIO.output(15,1)
-    GPIO.setup(36, GPIO.OUT)
-    GPIO.output(36,1)
-    GPIO.setup(38, GPIO.OUT)
-    GPIO.output(38,1)
-    GPIO.setup(40, GPIO.OUT)
-    GPIO.output(40,1)
+def gpio(value_lst):
+    for value in value_lst:
+        gpio=GPIO_Process(value)
+        gpio.gpio_configure()
+        gpio.gpio_output()
+        gpio.gpio_clean()
 
-    try:
-        GPIO.output(29,int(values[0]))
-        GPIO.output(31,int(values[1]))
-        GPIO.output(33,int(values[2]))
-        GPIO.output(35,int(values[0]))
-        GPIO.output(37,int(values[1]))
-        GPIO.output(15,int(values[2]))
-        GPIO.output(36,int(values[0]))
-        GPIO.output(38,int(values[1]))
-        GPIO.output(40,int(values[2]))
-    finally:
-        GPIO.cleanup()
+def clean_value_list():
+    values_list=[]
 
 
 # Create the audio class
 audio = CoreAudio()
+# Define a function to take the stream output
+def CallbackFunction(values):
+    """My simple callback function"""
+	values_list.append(values)
 
 # Register your callback
 audio.register(CallbackFunction)
@@ -49,19 +29,26 @@ audio.register(CallbackFunction)
 # Start audio processing
 audio.start()
 
-# Test reconfigure
-audio.stop()
-audio.configure(trigger_threshold = 100)
-audio.start()
-
 # Reset configuration
 audio.stop()
 audio.configure()
-audio.start()
+
+
+t1=threading.Thread(target=audio.start,args=())
+threads.append(t1)
+t2=threading.Thread(target=gpio,args=(value_list)
+threads.append(t2)
+t3=threading.Thread(target=sleep,args=(0.5))
+threads.append(t3)
+t4=threading.Thread(target=clean_value_list,args=())
+threads.append(t4)
+
 
 try:
     while True:
-        sleep(1)
+        for t in threads:
+		    t.setDaemon(True)
+			t.start()
 except KeyboardInterrupt:
     audio.deregister()
     audio.stop()
