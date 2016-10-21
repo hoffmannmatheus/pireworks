@@ -249,3 +249,7 @@ class CoreAudio():
 
         self.stream = None
         self.thread = None
+
+    def join(self):
+        """Blocks the calling thread until audio exits"""
+        self.thread.join()

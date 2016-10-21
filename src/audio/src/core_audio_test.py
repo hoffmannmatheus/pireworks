@@ -29,8 +29,7 @@ audio.start()
 #audio.start()
 
 try:
-    while True:
-        sleep(1)
+    audio.join()
 except KeyboardInterrupt:
     audio.deregister()
     audio.stop()
