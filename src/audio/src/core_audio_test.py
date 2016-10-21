@@ -6,8 +6,11 @@ def CallbackFunction(values):
     """My simple callback function"""
     print(values)
 
+AUDIO_FILE = "audio_sweep.wav"
+#AUDIO_FILE = None
+
 # Create the audio class
-audio = CoreAudio("audio_sweep.wav")
+audio = CoreAudio(AUDIO_FILE)
 
 # Register your callback
 audio.register(CallbackFunction)
@@ -17,13 +20,13 @@ audio.start()
 
 # Test reconfigure
 audio.stop()
-audio.configure(trigger_threshold = 100)
+audio.configure(output_binary=False)
 audio.start()
 
 # Reset configuration
-audio.stop()
-audio.configure()
-audio.start()
+#audio.stop()
+#audio.configure()
+#audio.start()
 
 try:
     while True:
