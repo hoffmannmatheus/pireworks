@@ -15,7 +15,11 @@ In order to use this class perform the following operations:
 2. Configure the desired paramters via the `configure()` operation
 3. Invoke the `start()` operation
 
-## Example Usage
+## RPi3 GPIO Usage
+
+The `audio.py` module is configured as the main RPi3 entity. To execute simply call `python audio.py`
+
+## General Usage
 
 ### Basic Operation
 
