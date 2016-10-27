@@ -24,7 +24,7 @@ The following section describes basic operation using either the microphone inpu
 from core_audio import CoreAudio
 
 # Define a function to take the list output
-def CallbackFunction(values):
+def callback_function(values):
     """My simple callback function"""
     print(values)
 
@@ -33,6 +33,9 @@ a = CoreAudio()
 
 # Use this constructor if you wish to read from a file
 a = CoreAudio("filename")
+
+# Register your callback
+a.register(callback_function)
 
 # Start the audio processing, this will spawn a thread for processing
 a.start()

@@ -8,6 +8,9 @@ def callback_function(values):
 # This will create an audio instance to read from the microphone
 a = CoreAudio()
 
+# Register your callback
+a.register(callback_function)
+
 # Start the audio processing, this will spawn a thread for processing
 a.start()
 

@@ -15,7 +15,7 @@ AUDIO_FILE = "audio_sweep.wav"
 audio = CoreAudio(AUDIO_FILE)
 
 # Register your callback
-audio.register(CallbackFunction)
+audio.register(callback_function)
 
 # Start audio processing
 audio.start()
