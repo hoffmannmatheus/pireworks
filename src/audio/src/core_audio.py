@@ -1,3 +1,4 @@
+"""The main audio processing module"""
 from threading import Thread
 import wave
 import pyaudio
@@ -65,8 +66,12 @@ class AudioInput(Thread):
         """The thread function"""
         while self.running is True:
             if self.wav is None:
-                # Read audio samples from the audio stream
-                data = numpy.fromstring(self.stream.read(self.chunk_size), dtype=numpy.int16)
+                try:
+                    # Read audio samples from the audio stream
+                    data = numpy.fromstring(self.stream.read(self.chunk_size), dtype=numpy.int16)
+                except BufferError:
+                    # Buffer errors are not fatal, continue
+                    continue
             else:
                 # Read audio samples from input file
                 if self.wav.tell() >= self.wav.getnframes():

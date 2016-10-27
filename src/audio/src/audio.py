@@ -1,73 +1,72 @@
-import pyaudio
-import audioop
-import matplotlib.pyplot as plt
-import numpy as np
-from itertools import izip
-import wave
-import sys
+from core_audio import CoreAudio
+import RPi.GPIO as GPIO
 
-#Read from microphone
-'''
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RATE = 44100
-CHUNK = 1024
-RECORD_SECONDS = 3
-WAVE_OUTPUT_FILENAME = "file.wav"
+# Define a function to take the list output
+def callback_function(values):
+    """Audio processing output function"""
+    # Map output to colors
+    red = values[0]
+    green = values[1]
+    blue = values[2]
 
-audio = pyaudio.PyAudio()
+    if red == 1 and green != 1:
+        GPIO.output(29, 1)
+        GPIO.output(31, 0)
+        GPIO.output(33, 0)
+        GPIO.output(35, 0)
+        GPIO.output(37, 0)
+        GPIO.output(15, 0)
+        GPIO.output(36, 0)
+        GPIO.output(38, 0)
+        GPIO.output(40, 0)
+    elif green == 1 and blue != 1:
+        GPIO.output(29, 1)
+        GPIO.output(31, 0)
+        GPIO.output(33, 0)
+        GPIO.output(35, 0)
+        GPIO.output(37, 1)
+        GPIO.output(15, 0)
+        GPIO.output(36, 0)
+        GPIO.output(38, 0)
+        GPIO.output(40, 0)
+    elif blue == 1:
+        GPIO.output(29, 1)
+        GPIO.output(31, 0)
+        GPIO.output(33, 0)
+        GPIO.output(35, 0)
+        GPIO.output(37, 1)
+        GPIO.output(15, 0)
+        GPIO.output(36, 0)
+        GPIO.output(38, 0)
+        GPIO.output(40, 1)
 
- start Recording
-stream = audio.open(format=FORMAT,
-                    channels=CHANNELS,
-                    rate=RATE, input=True,
-                    frames_per_buffer=CHUNK)
+# This will create an audio instance to read from the microphone
+a = CoreAudio()
 
-frames = []
-for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-    data = stream.read(CHUNK)
-    frames.append(data)
-frames = ''.join(frames)
+# Register your callback
+a.register(callback_function)
 
-stream.stop_stream()
-stream.close()
-audio.terminate()
+# Configure audio
+a.configure(cutoff_freqs=[800, 2000])
 
-fig = plt.figure()
-s = fig.add_subplot(111)
-amplitude = numpy.fromstring(frames, numpy.int16)
-s.plot(amplitude)
-fig.savefig('t.png')
-'''
+# Setup GPIO pins
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(29, GPIO.OUT)
+GPIO.setup(31, GPIO.OUT)
+GPIO.setup(33, GPIO.OUT)
+GPIO.setup(35, GPIO.OUT)
+GPIO.setup(37, GPIO.OUT)
+GPIO.setup(15, GPIO.OUT)
+GPIO.setup(36, GPIO.OUT)
+GPIO.setup(38, GPIO.OUT)
+GPIO.setup(40, GPIO.OUT)
 
+# Start the audio processing, this will spawn a thread for processing
+a.start()
 
-#read from file
-CHUNK = 1024
+# In order to keep the audio thread running, this thread of execution cannot exit
+# This call will block until audio exits
+a.join()
 
-if len(sys.argv) < 2:
-    print("Plays a wave file.\n\nUsage: %s filename.wav" % sys.argv[0])
-    sys.exit(-1)
-
-wf = wave.open(sys.argv[1], 'rb')
-
-p = pyaudio.PyAudio()
-
-
-stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                channels=wf.getnchannels(),
-                rate=wf.getframerate(),
-                output=True)
-
-
-data = wf.readframes(CHUNK)
-
-stream.stop_stream()
-stream.close()
-
-p.terminate()
-
-fig = plt.figure()
-s = fig.add_subplot(111)
-amplitude = np.fromstring(data, np.int16)
-s.plot(amplitude)
-fig.savefig('pic.png')
+# Cleanup GPIO pins
+GPIO.cleanup()
