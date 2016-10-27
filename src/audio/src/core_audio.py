@@ -1,3 +1,4 @@
+"""The main audio processing module"""
 from threading import Thread
 import wave
 import pyaudio

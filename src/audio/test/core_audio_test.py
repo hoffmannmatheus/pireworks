@@ -1,8 +1,10 @@
+import sys
+sys.path.append('../src')
 from core_audio import CoreAudio
 from time import sleep
 
 # Define a function to take the stream output
-def CallbackFunction(values):
+def callback_function(values):
     """My simple callback function"""
     print(values)
 
