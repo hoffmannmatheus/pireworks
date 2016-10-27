@@ -46,6 +46,9 @@ a = CoreAudio()
 # Register your callback
 a.register(callback_function)
 
+# Configure audio
+a.configure(cutoff_freqs=[800, 2000])
+
 # Setup GPIO pins
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(29, GPIO.OUT)
