@@ -2,7 +2,7 @@
 
 ##Overview
 
-This is the initial Activity that a user gets to experience once the App is first launched.
+This is the initial Activity that a user experiences once the App is first launched.
 
 Kindly view actual code to get more detailed information : 
 [Home Activity Code](https://github.com/hoffmannmatheus/pireworks/blob/master/src/app/pireworks/app/src/main/java/com/pireworks/app/pireworks/HomeActivity.java)
