@@ -19,6 +19,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Set;
 
+""" The HomeActivity extends the AppCompatActivity that serves as the base class for activities that use support action bar featured"""
 public class HomeActivity extends AppCompatActivity {
 
     private TextView mStatusTv;
