@@ -33,6 +33,13 @@ public class HomeActivity extends AppCompatActivity {
     private BluetoothAdapter mBluetoothAdapter;
 
     @Override
+    
+     
+    """ onCreate function instantiates the Activity by taking all it's Pre-Set layout values from a HomeActivity XML file."""
+    """ The Bundle savedInstanceState is used here to save all the data the activity uses to help restore an activity once a destroyed activity is created again""" 
+    """ It has a bluetooh adapter method to instantiate default adapter found on the device.(mBluetoothAdapter)"""
+    """ Also has the (mProgressDlg) method to handle the display of the progress when ever devices are being scanned"""  
+        
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -50,7 +57,15 @@ public class HomeActivity extends AppCompatActivity {
         mProgressDlg.setMessage("Scanning...");
         mProgressDlg.setCancelable(false);
         mProgressDlg.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+           
             @Override
+            """ onClick method handles the various button actions that are carried out by a user """
+            """ mActivateBtn (onClicklistener) carries out the action of enabling and disabling on the app through the bluetooth adapter on the device and if there isn't an existing"""
+            """ adapter, shows (Unsupported Message)."""   
+            """ mScanBtn (onClicklistener) carries out the action using the bluetooth adapter to discover devices"""
+            """ mPairedBtn (onClicklistener) carries the action of pairing with bluetooth devices found in the Bluetooth Device Array List"""    
+            """ Intent filter handles the requests that are sent to the devices bluetooh adapter to handle different states of the adapter"""
+            """ The Receiver handles the different state change requests and responses that is gotten from the bluetooth adapter"""    
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
@@ -119,6 +134,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    """ onPause method carries out the action of pausing the bluetooth adapter when it's in discovery state"""
+    """ The actual method is called up from the class AppCompatActivity"""   
+        
     public void onPause() {
         if (mBluetoothAdapter != null) {
             if (mBluetoothAdapter.isDiscovering()) {
@@ -130,13 +148,20 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    """ The onDestroy method is called from the AppCompatActivity class and handles the closing of the Activity and also the unregistering of the receiver"""
+    """ that handles the action state change of the bluetooth adapter""" 
+        
     public void onDestroy() {
         unregisterReceiver(mReceiver);
 
         super.onDestroy();
     }
-
-    private void showEnabled() {
+    
+ """ These two methods (showEnabled and showDisabled) carry the action of displaying the different states that can be invoked when user clicks on"""
+ """ mActivateBtn."""   
+ """ The method showUnsupported carries out the action of displaying to a message of (Bluetooth Unsupported), if adapter is unavailable or inactive"""    
+   
+     private void showEnabled() {
         mStatusTv.setText("Bluetooth is On");
         mStatusTv.setTextColor(Color.BLUE);
 
@@ -168,10 +193,19 @@ public class HomeActivity extends AppCompatActivity {
         mScanBtn.setEnabled(false);
     }
 
+    """ This method carries out the action of displaying a little display widget"""
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
-
+    
+""" This method handles the reciever with in this activity that communicates with the device bluetooth adapter to invoke the different state(intent)changes"""
+"""  BluetoothAdapter.ACTION_STATE_CHANGED this handles the initial request of making a state change"""
+"""  BluetoothAdapter.STATE_ON this state when requested is to turn on the bluetooth adapter on the device and send back a reposnse to the reciever for the
+""" action to take effect within the app Activity""" 
+""" BluetoothAdapter.ACTION_DISCOVERY_STARTED this action is for the discovery (scanning) of bluetooth devices around. The found devices are added to an Array List"""
+""" BluetoothAdapter.ACTION_DISCOVERY_FINISHED this action handles the closing of the discovery state."""
+""" BluetoothDevice.ACTION_FOUND this action handles the state of the discovered devices and parsing them on to the Bluetooth device ArrayList"""
+    
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
