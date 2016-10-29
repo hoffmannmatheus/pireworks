@@ -200,7 +200,7 @@ public class HomeActivity extends AppCompatActivity {
     
 """ This method handles the reciever with in this activity that communicates with the device bluetooth adapter to invoke the different state(intent)changes"""
 """  BluetoothAdapter.ACTION_STATE_CHANGED this handles the initial request of making a state change"""
-"""  BluetoothAdapter.STATE_ON this state when requested is to turn on the bluetooth adapter on the device and send back a reposnse to the reciever for the
+"""  BluetoothAdapter.STATE_ON this state when requested is to turn on the bluetooth adapter on the device and send back a reposnse to the reciever for the"""
 """ action to take effect within the app Activity""" 
 """ BluetoothAdapter.ACTION_DISCOVERY_STARTED this action is for the discovery (scanning) of bluetooth devices around. The found devices are added to an Array List"""
 """ BluetoothAdapter.ACTION_DISCOVERY_FINISHED this action handles the closing of the discovery state."""
