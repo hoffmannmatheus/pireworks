@@ -5,7 +5,7 @@
 This is the initial Activity that a user gets to experience once the App is first launched.
 
 Kindly view actual code to get more detailed information : 
-[a link](https://github.com/hoffmannmatheus/pireworks/blob/master/src/app/pireworks/app/src/main/java/com/pireworks/app/pireworks/HomeActivity.java)
+[Home Activity Code](https://github.com/hoffmannmatheus/pireworks/blob/master/src/app/pireworks/app/src/main/java/com/pireworks/app/pireworks/HomeActivity.java)
 
 1. `onCreate` handles the creation of the Activity (initiation of an activity lifecyle) acquirng  all the pre-set screen layout information from an XML file and instantiating the various resources that is used to create the activity.
 
