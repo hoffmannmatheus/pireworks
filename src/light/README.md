@@ -1,7 +1,6 @@
 # Light Module
 - Overview
 - Hardware
-- Rpi GPIO
 - RPi GPIO
   * Features
 - GPIO PWM
