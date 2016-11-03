@@ -1,21 +1,28 @@
+# importing the RPi.GPIO modules
 import RPi.GPIO as GPIO
+
+# this lets us have a time delay
 from time import sleep
 
+# set up GPIO BOARD numbering scheme
 GPIO.setmode(GPIO.BOARD)
 
-blinkCount= 3
+blinkCnt = 3
 count = 0
-LEDPin = 7
-GPIO.setup(LEDPin, GPIO.OUT)
+pin = 7
+
+# set GPIO pin as output
+GPIO.setup(pin, GPIO.OUT)
 
 try:
-    while count < blinkCount:
-        GPIO.output(LEDPin, True)
+    while count < blinkCnt:
+        GPIO.output(pin, True)  # set gpio pin to high
         print("LED ON")
-        sleep(3)
-        GPIO.output(LEDPin, False)
+        sleep(3)    # wait 1 seconds
+        GPIO.output(pin, False)  # set gpio pin to low
         print("LED OFF")
-        sleep(1)
-        count +=1
+        sleep(1)   # wait 1 seconds
+        count += 1
 finally:
-	GPIO.cleanup()
+    # reset every resources that has been set up by this program
+    GPIO.cleanup()
