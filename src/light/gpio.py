@@ -9,7 +9,7 @@ class GPIO_Process():
 	#setup GPIO port and configuration
 	    GPIO.setmode(GPIO.BOARD)
         for gpio_num in self.gpio_setup:
-            GPIO.setup(gpio_num,GPIO,OUT)
+            GPIO.setup(gpio_num,GPIO.OUT)
             GPIO.output(gpio_num,1)
 	
 	def gpio_output(self):
