@@ -1,4 +1,11 @@
 # Light Module
+- Overview
+- Hardware
+- Rpi GPIO
+- RPi GPIO
+  * Features
+- GPIO PWM
+
 ## Overview
 
 The light module transforms the light codes into actual signals to the light devices.
@@ -12,12 +19,14 @@ Development & Target hardware is the Raspberry Pi 3 Model B. RGB led lights and 
 
 **Tools / Software** : IDLE for python, Fritzing for breadboard layout and PCB Schematic
 
-(http://fritzing.org/home/)
+http://fritzing.org/home/
 
-(https://www.python.org/downloads/)
+https://www.python.org/downloads/
 
 ## Rpi.GPIO 
+https://pythonhosted.org/RPIO/index.html
 
+https://sourceforge.net/projects/raspberry-gpio-python/
 
 RPi.GPIO module is the driving force behind our Python examples. This set of Python files and source is included with Raspbian, so assuming you’re running that most popular Linux distribution, you don’t need to download anything to get started.
 
@@ -70,7 +79,7 @@ In RPi.GPIO you can use either pin numbers (BOARD) or the Broadcom GPIO numbers 
 
 - `GPIO.cleanup()` - To cleanup / reset any resources / channel that your program might have used
 
-## PWM
+## GPIO PWM
 
 PWM is pulse-width modulation. Put simply, this is a signal that is switched between on and off, usually rather quickly.
 Duty cycle function is the percentage of time between pulses that the signal is “high” or “On”. So if you have a frequency of 50 Hz and a duty cycle of 50%, it means that every 1/50th (0.02) of a second a new pulse starts and that pulse is switched off half -way through that time period (after 1/100th or 0.01s).
