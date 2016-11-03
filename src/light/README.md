@@ -33,7 +33,7 @@ RPi.GPIO module is the driving force behind our Python examples. This set of Pyt
 RPIO is an advanced GPIO module for the Raspberry Pi. PWM via DMA (up to 1µs resolution) GPIO input and output (drop-in replacement for RPi.GPIO) GPIO interrupts (callbacks when events occur on input gpios) TCP socket interrupts (callbacks when tcp socket clients send data)
 RPIO consists of two main components:
 
-- RPIO – Python modules which you can import in Python 2 or 3 with import RPIO, import RPIO.PWM, etc.
+- RPIO – Python modules which you can import in Python 2 or 3.
 - rpio – command-line tools for inspecting and manipulating GPIOs system-wide.
 
 Features :
@@ -51,7 +51,7 @@ In order to us RPi.GPIO throughout the rest of your Python script, you need to p
 ```python
 import RPi.GPIO as GPIO
 ```
- after importing the RPi.GPIO module, we set our GPIO numbering mode.
+
 The method `sleep()` suspends execution for the given number of seconds.
 
 ```python
@@ -61,11 +61,13 @@ from time import sleep
 
 After you’ve included the RPi.GPIO module, the next step is to determine which of the two pin-numbering schemes you want to use:
 
+In RPi.GPIO you can use either pin numbers (BOARD) or the Broadcom GPIO numbers (BCM)
+
+
 ```python
 # set up GPIO BOARD numbering
 GPIO.Setmode(GPIO.BOARD)
 ```
-In RPi.GPIO you can use either pin numbers (BOARD) or the Broadcom GPIO numbers (BCM)
  
 1. `GPIO.BOARD` -  Board numbering scheme. This option specifies that you are referring to the pins by the number of the pin the plug. That means, the numbers printed on the board.
 
@@ -87,13 +89,17 @@ Duty cycle function is the percentage of time between pulses that the signal is 
 - `GPIO.PWM([pin], [frequency])` - Initialize PWM function. 
 
 
-- `PWM.Start([duty cycle])` - Function to set an initial value.For example :
+- `PWM.Start([duty cycle])` - Function to set an initial value.
 
-PWM.Start(50) -set PWM pin up with a frequency of 1kHz, and set that output to a 50% duty cycle.
-…will set our PWM pin up with a frequency of 1kHz, and set that output to a 50% duty cycle.
-To adjust the value of the PWM output, use the pwm.ChangeDutyCycle([duty cycle]) function. [duty cycle] can be any value between 0 (i.e 0%/LOW) and 100 (ie.e 100%/HIGH).
+`For example:`
 
-- `PWM.ChangeDutyCycle([duty cycle])` - To adjust the value of the PWM output,  [duty cycle] can be any value between 0 (i.e 0%/LOW) and 100 (ie.e 100%/HIGH). 
+`PWM.Start(50)` -set PWM pin up with a frequency of 1kHz, and set that output to a 50% duty cycle.This will set our PWM pin up with a frequency of 1kHz, and set that output to a 50% duty cycle.
+
+To adjust the value of the PWM output, use the pwm.ChangeDutyCycle([duty cycle]) function. [duty cycle] can be any value between 0 (i.e 0%/LOW) and 100 (i.e. 100%/HIGH).
+
+- `PWM.ChangeDutyCycle([duty cycle])` - To adjust the value of the PWM output,[duty cycle] can be any value between 0 (i.e 0%/LOW) and 100 (ie.e 100%/HIGH). 
+
+- `PWM.Stop` - stop PWM
 
 `example`
 
