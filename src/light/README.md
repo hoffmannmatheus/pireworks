@@ -56,21 +56,73 @@ After you’ve included the RPi.GPIO module, the next step is to determine which
 # set up GPIO BOARD numbering
 GPIO.Setmode(GPIO.BOARD)
 ```
+In RPi.GPIO you can use either pin numbers (BOARD) or the Broadcom GPIO numbers (BCM)
+ 
+1. `GPIO.BOARD` -  Board numbering scheme. This option specifies that you are referring to the pins by the number of the pin the plug. That means, the numbers printed on the board.
 
-## History
+2. `GPIO.BCM` -  Broadcom chip-specific pin numbers. These pin numbers follow the lower-level numbering system defined by the Raspberry Pi’s Broadcom-chip brain.these are the numbers after "GPIO" in the rectangles of the below diagrams:
 
-TODO: Write history
+- `GPIO.setup([Port_or_pin], [GPIO.IN, GPIO.OUT])` - To write GPIO port/pin as an input or output
 
-## Credits
+- `GPIO.output([Port_or_pin], [GPIO.LOW, GPIO.HIGH])` - To write GPIO port/pin as an high or low
 
-TODO: Write credits
+- `GPIO.input([pin])` - Used to read GPIO input.If a pin is configured as an input, you can use the GPIO.input([pin]) function to read its value. The input()function will return either a True or False indicating whether the pin is HIGH or LOW.
 
-## License
+- `GPIO.cleanup()` - To cleanup / reset any resources / channel that your program might have used
 
-TODO: Write license
+## PWM
 
-This site was built using [GitHub Pages](https://pages.github.com/).
+PWM is pulse-width modulation. Put simply, this is a signal that is switched between on and off, usually rather quickly.
+Duty cycle function is the percentage of time between pulses that the signal is “high” or “On”. So if you have a frequency of 50 Hz and a duty cycle of 50%, it means that every 1/50th (0.02) of a second a new pulse starts and that pulse is switched off half -way through that time period (after 1/100th or 0.01s).
 
-Use `git status` to list all new or modified files that haven't yet been committed.
+- `GPIO.PWM([pin], [frequency])` - Initialize PWM function. 
 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+
+- `PWM.Start([duty cycle])` - Function to set an initial value.For example :
+
+PWM.Start(50) -set PWM pin up with a frequency of 1kHz, and set that output to a 50% duty cycle.
+…will set our PWM pin up with a frequency of 1kHz, and set that output to a 50% duty cycle.
+To adjust the value of the PWM output, use the pwm.ChangeDutyCycle([duty cycle]) function. [duty cycle] can be any value between 0 (i.e 0%/LOW) and 100 (ie.e 100%/HIGH).
+
+- `PWM.ChangeDutyCycle([duty cycle])` - To adjust the value of the PWM output,  [duty cycle] can be any value between 0 (i.e 0%/LOW) and 100 (ie.e 100%/HIGH). 
+
+`example`
+
+```python
+# set up GPIO BOARD numbering scheme
+GPIO.setmode(GPIO.BOARD)
+
+# set GPIO pin as output
+GPIO.setup(22, GPIO.OUT)
+GPIO.setup(18, GPIO.OUT)
+
+#  create PWm Instance
+white = GPIO.PWM(22, 100)
+red = GPIO.PWM(18, 100)
+
+#  start PWM
+white.start(0)
+
+#  set PWM pin up with a frequency of 1kHz
+#  and set that output to a 100% duty cycle.
+red.start(100)
+
+pause_time = 0.02
+
+try:
+    while True:
+        for i in range(0,101):
+            white.ChangeDutyCycle(i) # change duty cycle where 0.0 <= i <= 100.0
+            red.ChangeDutyCycle(100-i)
+            sleep(pause_time)
+        for i in range(100,-1,-1):
+            white.ChangeDutyCycle(i)
+            red.ChangeDutyCycle(100-i)
+            sleep(pause_time) # wait 0.02 seconds
+finally:
+    #  stop PWM
+    white.stop()
+    red.stop()
+    # reset every resources that has been set up by this program
+    GPIO.cleanup()
+```
