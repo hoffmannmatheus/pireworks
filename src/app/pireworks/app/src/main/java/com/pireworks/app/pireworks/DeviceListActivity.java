@@ -23,7 +23,7 @@ public class DeviceListActivity extends Activity implements DeviceListAdapter.On
     private DeviceListAdapter mAdapter; 
     private ArrayList<BluetoothDevice> mDeviceList;
 
-    /**  Perform Initial Application Activities -
+    /**  Perform Initial activities for launching -
          1. Get UI elements from the xml and set the content for the activity
          2. Get default Bluetooth adapter 
          3. Register the broadcast receiver.
