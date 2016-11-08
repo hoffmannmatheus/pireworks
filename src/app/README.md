@@ -35,7 +35,7 @@ This is the Activity that displays the list of discovered Bluetooth devices whic
 
 Kindly view actual code to get more detailed information : [DeviceListActivity code] (https://github.com/hoffmannmatheus/pireworks/blob/master/src/app/pireworks/app/src/main/java/com/pireworks/app/pireworks/DeviceListActivity.java)
 
-1. `onCreate` -  launches activity by fetching all the required UI components from the [activity_paired_devices.xml] (https://github.com/hoffmannmatheus/pireworks/blob/master/src/app/pireworks/app/src/main/res/layout/activity_paired_devices.xml) file and instantiating the various Device List Adapter to discover Bluetooth devices ; Bluetooth device discovery is a runtime activity and hence we use intents to help with late binding; Sets the adapter to default BluetoothAdapter and register the Bluetooth Broadcast receiver.
+1. `onCreate` -  launches activity by fetching all the required UI components from the [activity_paired_devices.xml] (https://github.com/hoffmannmatheus/pireworks/blob/master/src/app/pireworks/app/src/main/res/layout/activity_paired_devices.xml) file and instantiating the Device List Adapter to discover Bluetooth devices ; Bluetooth device discovery is a runtime activity and hence we use intents to facilitate late binding; Sets the adapter to default BluetoothAdapter and register the Bluetooth Broadcast receiver.
 
 2. `mPairReceiver` - broadcast receiver; whenever an Intent Broadcast is received, the onReceive method is executed.
 
