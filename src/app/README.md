@@ -37,7 +37,7 @@ Kindly view actual code to get more detailed information : [DeviceListActivity c
 
 1. `onCreate` -  launches activity by fetching all the required UI components from the [activity_paired_devices.xml] (https://github.com/hoffmannmatheus/pireworks/blob/master/src/app/pireworks/app/src/main/res/layout/activity_paired_devices.xml) file and instantiating the Device List Adapter to discover Bluetooth devices ; Bluetooth device discovery is a runtime activity and hence we use intents to facilitate late binding; Sets the adapter to default BluetoothAdapter and register the Bluetooth Broadcast receiver.
 
-2. `mPairReceiver` - broadcast receiver; whenever an Intent Broadcast is received, the onReceive method is executed.
+2. `mPairReceiver` - broadcast receiver; whenever a Broadcast Intent is received is received from a Bluetooth Device, the onReceive method is executed.
 
 3. `onReceive` - whenever the state of the Bluetooth device is changed i.e. when the ACTION_BOND_STATE changes from paired to unpaired or vice versa), the method checks for the state of the device in real-time and displays a static text view accordingly.
 
