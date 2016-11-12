@@ -8,11 +8,9 @@ def callback_function(values):
     """My simple callback function"""
     print(values)
 
-AUDIO_FILE = "audio_sweep.wav"
-#AUDIO_FILE = None
-
 # Create the audio class
-audio = CoreAudio(AUDIO_FILE)
+#audio = CoreAudio()
+audio = CoreAudio("audio_sweep.wav")
 
 # Register your callback
 audio.register(callback_function)
