@@ -10,6 +10,11 @@ import db
 TAG = "PireworksServer"
 UUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
+DATA_ACTION = "action"
+DATA_CONFIG = "config"
+DATA_ACTION_GET = "get"
+DATA_ACTION_SET = "set"
+
 class BackEnd():
     """Controls the bluetooth server."""
     def __init__(self):
@@ -70,7 +75,7 @@ class BluetoothServer(Thread):
             try:
                 while True:
                     data = self.client_sock.recv(1024)
-                    self.handle_message(data)
+                    self.handle_request(data)
             except IOError:
                 pass
 
@@ -78,20 +83,32 @@ class BluetoothServer(Thread):
         self.server_sock.close()
         print("disconnected")
 
-    def handle_message(self, data):
+    def handle_request(self, raw_data):
         """Handles a message sent from the client."""
-        if len(data) == 0: 
+        data = {}
+        try:
+            data = json.loads(raw_data)
+        except ValueError:
+            print("Invalid JSON oject received")
             return
 
-        # TODO:
-        # data = json.load(data)
-        # check message tepe (get / set)
-        # if get, return default Configuration
-        # if set, get the db.saveConfiguration(Configuration(data["config"]))
-        #   and call callback.
+        if DATA_ACTION not in data:
+            print("No action received.")
+            return
+        action = data[DATA_ACTION]
+        print(action)
 
-        config = db.getDefaultConfiguration()
-        self.client_sock.send(config.toJson())
+        # TODO Send Ok/Error messages back?
 
-        if self.callback is not None:
-            self.callback(config)
+        if action == DATA_ACTION_GET:
+            config = db.getDefaultConfiguration()
+            self.client_sock.send(config.toJson())
+
+        elif action == DATA_ACTION_SET:
+            if DATA_CONFIG not in data:
+                print("Configuration not received!")
+                return
+            config = Configuration(data[DATA_CONFIG])
+            if self.callback is not None:
+                self.callback(config)
+            db.saveConfiguration(config)

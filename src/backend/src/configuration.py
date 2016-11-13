@@ -18,18 +18,17 @@ class Configuration():
     chunk = 0
     output_binary = False
 
-    def __init__(self, db_row=None, json_str=None):
+    def __init__(self, db_row=None, data=None):
         """Constructor
         Parameters
         ----------
         db_row : Database Row (optional)
             A full database roll that may be used to build this Configuration.
-        db_rojson_strw : Json String (optional)
+        data : Json String (optional)
             A Configuration object encoded into a string.
         """
-        if type(json_str) is str:
-            # From json
-            data = json.load(json_str)
+        if type(data) is dict:
+            # From json dict
             if "id" in data: self.id = data["id"]
             if "is_default" in data: self.is_default = data["is_default"]
             if "name" in data: self.name = data["name"]
