@@ -1,12 +1,12 @@
 """Provides a SQLite database abstraction."""
 
 import sqlite3
+import tone
 from configuration import Configuration
-from tone import Tone
 
 # Default paths and values
-DB_PATH = 'data/db.sqlite'
-SCHEMA_PATH = 'data/schema.sql'
+DB_PATH = 'backend/src/data/db.sqlite'
+SCHEMA_PATH = 'backend/src/data/schema.sql'
 
 # Queries
 QUERY_INSERT_CONFIG = 'INSERT INTO \
@@ -63,7 +63,7 @@ def getDefaultConfiguration():
     try:
         cursor.execute(QUERY_SELECT_DEFAULT)
         for row in cursor.fetchall():
-            configuration = Configuration(row)
+            configuration = Configuration(db_row=row)
     except sqlite3.IntegrityError as e:
         print('(getDefaultConfiguration) Error: ' + str(e))
 
@@ -88,7 +88,7 @@ def getConfigurations():
     try:
         cursor.execute(QUERY_SELECT_ALL)
         for row in cursor.fetchall():
-            configurations.append(Configuration(row))
+            configurations.append(Configuration(db_row=row))
     except sqlite3.IntegrityError as e:
         print('(getConfigurations) Error: ' + str(e))
 
@@ -126,7 +126,7 @@ def saveConfiguration(config, update=False):
         id = config.id,
         is_default= 1 if config.is_default else 0,
         name=config.name, 
-        colors=','.join(Tone().getColorList(config.colors)),
+        colors=','.join(tone.toColorList(config.colors)),
         trigger_threshold=config.trigger_threshold,
         trigger_offset=config.trigger_offset,
         scaled_max_value=config.scaled_max_value,
