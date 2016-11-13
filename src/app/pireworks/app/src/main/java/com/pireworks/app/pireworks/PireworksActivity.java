@@ -53,10 +53,11 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
 //                mBluetoothSocket = (BluetoothSocket) method.invoke(mDevice, (Object[]) null);
                 mBluetoothSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
                 mBluetoothSocket.connect();
-                mInputStream = mBluetoothSocket.getInputStream();
                 mOutputStream = mBluetoothSocket.getOutputStream();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+                Toast.makeText(this, "Cannot start socket: " + e.getMessage(), Toast.LENGTH_SHORT);
+                finish();
             }
         }
 
