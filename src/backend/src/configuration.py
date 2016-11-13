@@ -1,3 +1,6 @@
+
+from tone import Tone
+
 # Configuration class
 class Configuration():
     """Represents a Pireworks configuration."""
@@ -6,7 +9,7 @@ class Configuration():
     id = 1
     name = ""
     is_default = False
-    cutoff_freqs = []
+    colors = Tone().default_color_map
     trigger_threshold = 0
     trigger_offset = 0
     scaled_max_value = 0
@@ -26,7 +29,8 @@ class Configuration():
             self.id = db_row[0]
             self.is_default = db_row[1] == 1
             self.name = db_row[2]
-            self.cutoff_freqs = map(int, db_row[3].split(','))
+            color_list = map(str, db_row[3].split(','))
+            self.colors = Tone().getColorMap(color_list)
             self.trigger_threshold = db_row[4]
             self.trigger_offset = db_row[5]
             self.scaled_max_value = db_row[6]
@@ -36,11 +40,11 @@ class Configuration():
 
     def __str__(self):
         """Overrides the class str() function"""
-        return '[id = {0}, Name = "{1}", is_default = {2}, cutoff_freqs = [{3}], trigger_threshold = {4}, rate = {5}, chunk = {6}, output_binary = {7}]'.format(
+        return '[id = {0}, Name = "{1}", is_default = {2}, colors = {3}, trigger_threshold = {4}, rate = {5}, chunk = {6}, output_binary = {7}]'.format(
                         self.id,
                         self.name,
                         str(self.is_default),
-                        ','.join(map(str, self.cutoff_freqs)),
+                        str(self.colors),
                         self.trigger_threshold,
                         self.rate,
                         self.chunk,

@@ -2,6 +2,7 @@
 
 import sqlite3
 from configuration import Configuration
+from tone import Tone
 
 # Default paths and values
 DB_PATH = 'data/db.sqlite'
@@ -10,20 +11,20 @@ SCHEMA_PATH = 'data/schema.sql'
 # Queries
 QUERY_INSERT_CONFIG = 'INSERT INTO \
     configuration ( \
-        is_default, name, cutoff_freqs, trigger_threshold, trigger_offset, scaled_max_value, \
+        is_default, name, colors, trigger_threshold, trigger_offset, scaled_max_value, \
         output_binary, chunk, rate ) \
     VALUES ( \
-        {is_default}, "{name}", "{cutoff_freqs}", {trigger_threshold}, {trigger_offset}, {scaled_max_value}, \
+        {is_default}, "{name}", "{colors}", {trigger_threshold}, {trigger_offset}, {scaled_max_value}, \
         {output_binary}, {chunk}, {rate} );'
 
 QUERY_UPDATE_CONFIG = 'REPLACE INTO \
     configuration ( \
         id, \
-        is_default, name, cutoff_freqs, trigger_threshold, trigger_offset, scaled_max_value, \
+        is_default, name, colors, trigger_threshold, trigger_offset, scaled_max_value, \
         output_binary, chunk, rate ) \
     VALUES ( \
         {id}, \
-        {is_default}, "{name}", "{cutoff_freqs}", {trigger_threshold}, {trigger_offset}, {scaled_max_value}, \
+        {is_default}, "{name}", "{colors}", {trigger_threshold}, {trigger_offset}, {scaled_max_value}, \
         {output_binary}, {chunk}, {rate} );'
 
 QUERY_SELECT_DEFAULT = 'SELECT * FROM configuration WHERE is_default = 1 LIMIT 1;'
@@ -125,7 +126,7 @@ def saveConfiguration(config, update=False):
         id = config.id,
         is_default= 1 if config.is_default else 0,
         name=config.name, 
-        cutoff_freqs=','.join(map(str, config.cutoff_freqs)),
+        colors=','.join(Tone().getColorList(config.colors)),
         trigger_threshold=config.trigger_threshold,
         trigger_offset=config.trigger_offset,
         scaled_max_value=config.scaled_max_value,
