@@ -13,6 +13,7 @@ sudo killall watchdog.sh
 sudo killall python
 
 # Run backend
-sudo $WATCHDOG python $PIREWORKS/backend/src/server.py
+cd $PIREWORKS
+sudo $WATCHDOG python main.py
 
-echo "Running pireworks backend!"
+echo "Running pireworks!"
