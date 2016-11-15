@@ -83,7 +83,7 @@ a.start()
 
 Given the set of input shown in the figure below:
 
-<img src="audio.svg">
+![Alt text](audio.png?raw=true "Audio Example")
 
 The expected result would be as follows:
 

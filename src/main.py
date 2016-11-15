@@ -43,3 +43,5 @@ setConfigururation(config) # Sets the default config
 audio.start()
 
 print("Pireworks started succesfully")
+
+audio.join()
