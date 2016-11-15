@@ -1,4 +1,7 @@
 # Helpers to translate musical notes, colors and frequencies
+
+import itertools
+
 NOTES = {
     "C" : [65, 131, 262, 523, 1046, 2093, 4186],
     "D" : [73, 147, 294, 587, 1175, 2349, 4699],
@@ -21,7 +24,17 @@ DEFAULT_COLOR_MAP = {
 def toColorMap(color_list):
     """Translates a list of colors into a color map, in
     the proper order.
+    Parameters
+    ----------
+    color_list : list
+        The list of colors. Must have 7 colors, one for each note.
+        The list must also be ordered as in NOTES.
+    Returns
+    ----------
+    color_map : dict
+        The notes to color map.
     """
+
     if type(color_list) is not dict or len(color_list) != 7:
             # Must be a seven item dict!
         return DEFAULT_COLOR_MAP
@@ -36,6 +49,16 @@ def toColorMap(color_list):
         }
 
 def toColorList(color_map):
+    """Translates a color map into a list of colors.
+    Parameters
+    ----------
+    color_map : dict
+        The notes to color map, similar to DEFAULT_COLOR_MAP.
+    Returns
+    ----------
+    color_list : dict
+        The list of colors being used, ordered by tone as DEFAULT_COLOR_MAP.
+    """
     if not isValidColorMap(color_map):
         # Must be a seven item list!
         color_map = DEFAULT_COLOR_MAP
@@ -50,6 +73,16 @@ def toColorList(color_map):
         ]
 
 def isValidColorMap(color_map):
+    """Validates the given color_map.
+    Parameters
+    ----------
+    color_map : dict
+        The notes to color map, similar to DEFAULT_COLOR_MAP.
+    Returns
+    ----------
+    is_valid : bool
+        Is this a valid color map?
+    """
     if type(color_map) is not list:
         # Must be a list!
         return False
@@ -67,3 +100,15 @@ def isValidColorMap(color_map):
         return False
     # Otherwise, its good.
     return True
+
+def getFrequenciesAsList():
+    """Gets all frequencies.
+    Parameters
+    Returns
+    ----------
+    frequencies : list
+        The complete list of frequencies, ascending order.
+    """
+    frequencies = list(itertools.chain.from_iterable(NOTES.values()))
+    frequencies.sort()
+    return frequencies

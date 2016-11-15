@@ -100,7 +100,6 @@ def getConfigurations():
 
 def saveConfiguration(config, update=False):
     """Saves the given configuration to the database.
-   
     Parameters
     ----------
     config : Configuration
@@ -108,7 +107,6 @@ def saveConfiguration(config, update=False):
     update : bool
         Set this to True to update an existant configuration in the DB (must have an ID).
         Default is False, which means it will simply insert a new configuraiton.
-    
     Returns
     ----------
     success : bool

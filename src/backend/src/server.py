@@ -21,6 +21,14 @@ class BackEnd():
         self.thread = None
         db.setup()
 
+    def getDefaultConfiguration(self):
+        """Returns the default configuration.
+        Returns
+        ----------
+        configuration: Configuration
+            The default configuration."""
+        return db.getDefaultConfiguration()
+
     def start(self):
         """Starts the backend server."""
         self.thread = BluetoothServer(self.callback)
@@ -84,7 +92,11 @@ class BluetoothServer(Thread):
         print("disconnected")
 
     def handle_request(self, raw_data):
-        """Handles a message sent from the client."""
+        """Handles a message sent from the client.
+        Returns
+        ----------
+        raw_data: string
+            A string received from the client."""
         data = {}
         try:
             data = json.loads(raw_data)
