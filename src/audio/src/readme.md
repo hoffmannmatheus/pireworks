@@ -51,15 +51,50 @@ a.join()
 
 ### Reconfiguration
 
-The following section describes how to reconfigure audio, assuming the previous section has been implemented
+The following section describes how to reconfigure audio, assuming the previous section has been implemented. See the table below for the configuration options.
+
+| Parameter | Type | Range | Description |
+|-----------|------|-------|-------------|
+|`cutoff_freqs`|list of int|20-22,000|A list of frequencies used to divide the frequeny spectrum|
+|`trigger_threshold`|int|0-maxint|The magnitude required to trigger a signal|
+|`trigger_offset`|int|0-maxint|The offset to apply to `trigger_threshold` to determine the maximum scaled output|
+|`scaled_max_value`|int|0-maxint|The maximum scaled output value|
+|`output_binary`|bool|True or False|Provide output to callback function in binary or scaled output|
+|`rate`|int|44,000|The sample rate in Hertz|
+|`chunk_size`|int|512 (or a multiple thereof)|Number of samples to process per loop|
+
+As an example if the following code is used to configure the `CoreAudio`:
+
 ```python
 
 # Processing must be stopped before reconfigure
 a.stop()
 
-# Reconfigure - See the source for a complete listing of the options
-a.configure(output_binary=False)
+# Reconfigure
+a.configure(cutoff_freqs=[500,1000,1500,2000,2500],
+            trigger_threshold=1000,
+            trigger_offset=1000,
+            scaled_max_value=255
+            output_binary=False)
 
 # Restart processing
 a.start()
 ```
+
+Given the set of input shown in the figure below:
+
+<img src="audio.svg">
+
+The expected result would be as follows:
+
+`[102, 255, 0, 0, 0]`
+
+This is because the first frequency is above the `trigger_threshold` and 40% of `trigger_threshold` + `trigger_offset`. 
+The second value is set to the `scaled_max_value` because it is larger than `trigger_threshold` + `trigger_offset`. 
+The remaining values are zero because no signal was detected higher than the `trigger_threshold` in the respective bins. 
+
+If the `output_binary` value was set to `True` then the following output would be observed:
+
+ `[1, 1, 0, 0, 0]`
+
+ Determination of the meaning of the output values is left as an excercise for the owner of the `callback_function`
