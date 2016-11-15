@@ -68,6 +68,7 @@ public class DeviceListActivity extends Activity implements DeviceListAdapter.On
     **/
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
     
     /** Use BluetoothDevice's createBond() 
         to pair the selected device 

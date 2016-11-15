@@ -15,7 +15,7 @@ PI=pi@raspberrypi.local  # You can replace by the real IP, eg: "pi@12.34.56.78"
 PIREWORKS=/home/pi/pireworks
 
 # Copy repository to RPi
-rsync -avhPS --delete --exclude $SOURCE/.git $SOURCE $PI:$PIREWORKS
+rsync -avhPS --exclude-from=do_not_sync --delete --exclude $SOURCE/.git $SOURCE $PI:$PIREWORKS
 
 # Run
 ssh $PI "${PIREWORKS}/bin/run.sh"

@@ -9,6 +9,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -53,10 +57,12 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
 //                mBluetoothSocket = (BluetoothSocket) method.invoke(mDevice, (Object[]) null);
                 mBluetoothSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
                 mBluetoothSocket.connect();
-                mInputStream = mBluetoothSocket.getInputStream();
                 mOutputStream = mBluetoothSocket.getOutputStream();
-            } catch (IOException e) {
+                mInputStream = mBluetoothSocket.getInputStream();
+            } catch (Exception e) {
                 e.printStackTrace();
+                Toast.makeText(this, "Cannot start socket: " + e.getMessage(), Toast.LENGTH_SHORT);
+                finish();
             }
         }
 
@@ -118,8 +124,24 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
     // HELPER METHODS
     private void sendMessage(String message) {
         if (mOutputStream != null && message != null) {
+
+
+            /**
+             * TODO:
+             * When requesting the current configuration, use "action" = "get".
+             * If setting a config, use "action" = "set".
+             * When setting a config, the configuration will be expected in a "config" key.
+             *
+             * Note the '(new Gson()).toJson(...)'. This is just to translate a 'json builder' to an
+             * actual string, so it can appear in the text field.
+             */
+            JsonObject builder = new JsonObject();
+            builder.addProperty("action", "get");
+            builder.addProperty("random", message);
+            String jsonMessage = (new Gson()).toJson(builder);
+
             try {
-                mOutputStream.write(message.getBytes());
+                mOutputStream.write(jsonMessage.getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -148,7 +170,15 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
                 try {
 
                     bytes = mInputStream.read(buffer);
-                    appendMessage(mDevice.getName(), new String(buffer, 0, bytes));
+                    String json = new String(buffer, 0, bytes);
+
+                    JsonParser jsonParser = new JsonParser();
+                    JsonObject object = (JsonObject)jsonParser.parse(json);
+
+                    String configName = object.get("name").getAsString();
+                    JsonObject colorMap = object.get("colors").getAsJsonObject();
+
+                    appendMessage(mDevice.getName(), (new Gson()).toJson(object));
 
                 } catch (IOException e) {
                     e.printStackTrace();
