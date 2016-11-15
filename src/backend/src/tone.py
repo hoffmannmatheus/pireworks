@@ -35,8 +35,8 @@ def toColorMap(color_list):
         The notes to color map.
     """
 
-    if type(color_list) is not dict or len(color_list) != 7:
-            # Must be a seven item dict!
+    if type(color_list) is not list or len(color_list) != getNumberOfOctaves():
+        # Must be a seven item list!
         return DEFAULT_COLOR_MAP
     return {
             "C" : color_list[0],
@@ -84,11 +84,9 @@ def isValidColorMap(color_map):
         Is this a valid color map?
     """
     if type(color_map) is not list:
-        # Must be a list!
-        return False
-    if  len(color_map) != 7:
-        # Must have 7 items!
-        return False
+        return False  # Must be a list!
+    if  len(color_map) != getNumberOfOctaves():
+        return False  # Must have 7 items!
     if "C" not in color_map      \
         or "D" not in color_map  \
         or "E" not in color_map  \
@@ -96,14 +94,26 @@ def isValidColorMap(color_map):
         or "G" not in color_map  \
         or "A" not in color_map  \
         or "B" not in color_map:
-        # Must have all 7 notes
-        return False
-    # Otherwise, its good.
+        return False  # Must have all 7 notes
+    # Otherwise, its good
     return True
+
+def getColorsForAllFrequencies(color_map):
+    """Gets list of colors, given the colormap.
+    Parameters
+    ----------
+    color_map : dict
+        The notes to color map, similar to DEFAULT_COLOR_MAP.
+    Returns
+    ----------
+    colors : list
+        The complete list of colors for each tone, multiplied by the number of octaves.
+    """
+    return toColorList(color_map) * getNumberOfOctaves()
+
 
 def getFrequenciesAsList():
     """Gets all frequencies.
-    Parameters
     Returns
     ----------
     frequencies : list
@@ -112,3 +122,13 @@ def getFrequenciesAsList():
     frequencies = list(itertools.chain.from_iterable(NOTES.values()))
     frequencies.sort()
     return frequencies
+
+def getNumberOfOctaves():
+    """Number of octaves available.
+    Returns
+    ----------
+    octaves : number
+        The number of octaves available for each note.
+    """
+    return len(NOTES["C"])
+
