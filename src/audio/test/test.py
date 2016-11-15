@@ -4,7 +4,7 @@ import sys
 import numpy
 import RPi.GPIO as GPIO
 from time import sleep
-
+import light_module
 
 
 FORMAT = pyaudio.paInt16
@@ -42,8 +42,8 @@ while RUN is True:
     fft = numpy.fft.fft(data)
     fftBins = len(fft)
 
-# Obtain the sample frequencies that correspond to the FFT samples
-freqs = numpy.fft.fftfreq(fftBins)
+    # Obtain the sample frequencies that correspond to the FFT samples
+    freqs = numpy.fft.fftfreq(fftBins)
     
     # Sort the data based on provided cutoff values
     binResolution = RATE / fftBins
@@ -72,57 +72,16 @@ freqs = numpy.fft.fftfreq(fftBins)
     blue = highPeakValue >= TRIGGER_THRESHOLD
     # This is where to call the light module
     print("%d%d%d" % (red, green, blue))
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(29, GPIO.OUT)
-    GPIO.setup(31, GPIO.OUT)
-    GPIO.setup(33, GPIO.OUT)
-    GPIO.setup(35, GPIO.OUT)
-    GPIO.setup(37, GPIO.OUT)
-    GPIO.setup(15, GPIO.OUT)
-    GPIO.setup(36, GPIO.OUT)
-    GPIO.setup(38, GPIO.OUT)
-    GPIO.setup(40, GPIO.OUT)
-    
-    if red==1 and green !=1:
-        GPIO.output(29,1)
-        GPIO.output(31,0)
-        GPIO.output(33,0)
-        GPIO.output(35,0)
-        GPIO.output(37,0)
-        GPIO.output(15,0)
-        GPIO.output(36,0)
-        GPIO.output(38,0)
-        GPIO.output(40,0)
-    elif green==1 and blue !=1:
-        GPIO.output(29,1)
-        GPIO.output(31,0)
-        GPIO.output(33,0)
-        GPIO.output(35,0)
-        GPIO.output(37,1)
-        GPIO.output(15,0)
-        GPIO.output(36,0)
-        GPIO.output(38,0)
-        GPIO.output(40,0)
-    elif blue==1:
-        GPIO.output(29,1)
-        GPIO.output(31,0)
-        GPIO.output(33,0)
-        GPIO.output(35,0)
-        GPIO.output(37,1)
-        GPIO.output(15,0)
-        GPIO.output(36,0)
-        GPIO.output(38,0)
-        GPIO.output(40,1)
-    '''
-        elif green==1:
-        
-        elif blue==1:
-        GPIO.output(36,1)
-        '''
-    GPIO.cleanup()
-# Debug prints
-#print("- freq -\nlow = %d\nmid = %d\nhigh = %d\n" % (lowPeakFreq, midPeakFreq, highPeakFreq))
-#print("- value -\nlow = %d\nmid = %d\nhigh = %d\n" % (lowPeakValue, midPeakValue, highPeakValue))
+
+#light strip code start here:
+    if red==1 and green!=1:
+	light_module.start("red")
+    elif green==1 and blue!=1:
+	light_module.start('green')
+    else:
+	light_module.start('blue')
+
+
 
 # Cleanup
 stream.stop_stream()
