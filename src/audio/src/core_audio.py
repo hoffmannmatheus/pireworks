@@ -3,7 +3,7 @@ from threading import Thread
 import wave
 import math
 import pyaudio
-import numpy
+import scipy
 
 # All these values are configurable
 # See below for descriptions of these values
@@ -68,7 +68,7 @@ class AudioInput(Thread):
             if self.wav is None:
                 try:
                     # Read audio samples from the audio stream
-                    data = numpy.fromstring(self.stream.read(self.chunk_size), dtype=numpy.int16)
+                    data = scipy.fromstring(self.stream.read(self.chunk_size), dtype=scipy.int16)
                 except BufferError:
                     # Buffer errors are not fatal, continue
                     continue
@@ -77,10 +77,10 @@ class AudioInput(Thread):
                 if self.wav.tell() >= self.wav.getnframes():
                     self.wav.rewind()
 
-                data = numpy.fromstring(self.wav.readframes(self.chunk_size), dtype=numpy.int16)
+                data = scipy.fromstring(self.wav.readframes(self.chunk_size), dtype=scipy.int16)
 
             # Take the FFT of the data
-            fft = numpy.fft.fft(data)
+            fft = scipy.fft.fft(data)
             fft_bins = len(fft)
 
             # Bin the data based on provided cutoff values
@@ -95,22 +95,22 @@ class AudioInput(Thread):
             for index, value in enumerate(indicies):
                 fft_index = 0
                 if index is 0:
-                    fft_index = numpy.argmax(numpy.abs(fft[:value]))
+                    fft_index = scipy.argmax(scipy.abs(fft[:value]))
                 else:
-                    fft_index = numpy.argmax(numpy.abs(fft[indicies[index - 1]:value]))
+                    fft_index = scipy.argmax(scipy.abs(fft[indicies[index - 1]:value]))
 
                 fft_value = 0
                 if index is 0:
-                    fft_value = numpy.abs(fft[fft_index])
+                    fft_value = scipy.abs(fft[fft_index])
                 else:
-                    fft_value = numpy.abs(fft[indicies[index - 1] + fft_index])
+                    fft_value = scipy.abs(fft[indicies[index - 1] + fft_index])
 
                 self.process_value(fft_value, peak_values)
 
             # The last bin
             upper_bound = int((len(fft) - indicies[-1]) / 2)
-            fft_index = numpy.argmax(numpy.abs(fft[indicies[-1]:upper_bound]))
-            fft_value = numpy.abs(fft[indicies[-1] + fft_index])
+            fft_index = scipy.argmax(scipy.abs(fft[indicies[-1]:upper_bound]))
+            fft_value = scipy.abs(fft[indicies[-1] + fft_index])
 
             self.process_value(fft_value, peak_values)
 
