@@ -58,12 +58,13 @@ class Configuration():
 
     def __str__(self):
         """Overrides the class str() function"""
-        return '[id = {0}, Name = "{1}", is_default = {2}, colors = {3}, trigger_threshold = {4}, rate = {5}, chunk = {6}, output_binary = {7}]'.format(
+        return '[id = {0}, Name = "{1}", is_default = {2}, colors = {3}, trigger_threshold = {4}, trigger_offset = {5} rate = {6}, chunk = {7}, output_binary = {8}]'.format(
             self.id,
             self.name,
             str(self.is_default),
             str(self.colors),
             self.trigger_threshold,
+            self.trigger_offset,
             self.rate,
             self.chunk,
             str(self.output_binary))

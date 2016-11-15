@@ -132,3 +132,11 @@ def getNumberOfOctaves():
     """
     return len(NOTES["C"])
 
+def getNumberOfNotes():
+    """Number of notes available.
+    Returns
+    ----------
+    notes : number
+        The number of notes available.
+    """
+    return len(NOTES)
