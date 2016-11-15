@@ -1,6 +1,8 @@
 # main file
 
 import sys
+import time
+
 sys.path.append('audio/src')
 sys.path.append('backend/src')
 
@@ -16,11 +18,15 @@ audio = CoreAudio()
 config = backend.getDefaultConfiguration()
 
 def setConfigururation(c):
+    print("new configuraiton being set...", c.toJson())
+    audio.stop()
+    time.sleep(3) # let it stop properly
     audio.configure(
         cutoff_freqs=c.getCutoffFrequenciesAsList(),
         trigger_threshold=c.trigger_threshold,
         trigger_offset=c.trigger_offset,
-        output_binary=False)
+        output_binary=c.output_binary)
+    audio.start()
 
 def onNewConfiguration(new_config):
     print("new saved config", new_config)
@@ -38,9 +44,7 @@ backend.register(onNewConfiguration)
 backend.start()
 
 audio.register(onFrequencyDetected)
-#audio.configure(cutoff_freqs=[50, 500, 800, 1500, 3000], output_binary=False)
-setConfigururation(config) # Sets the default config
-audio.start()
+setConfigururation(config)  # Sets the default config (see schema.sql)
 
 print("Pireworks started succesfully")
 
