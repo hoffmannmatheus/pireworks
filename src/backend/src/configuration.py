@@ -59,11 +59,29 @@ class Configuration():
     def __str__(self):
         """Overrides the class str() function"""
         return '[id = {0}, Name = "{1}", is_default = {2}, colors = {3}, trigger_threshold = {4}, rate = {5}, chunk = {6}, output_binary = {7}]'.format(
-                        self.id,
-                        self.name,
-                        str(self.is_default),
-                        str(self.colors),
-                        self.trigger_threshold,
-                        self.rate,
-                        self.chunk,
-                        str(self.output_binary))
+            self.id,
+            self.name,
+            str(self.is_default),
+            str(self.colors),
+            self.trigger_threshold,
+            self.rate,
+            self.chunk,
+            str(self.output_binary))
+
+    def getColorsForAllFrequencies(self):
+        """Gets list of colors for this configuration.
+        Returns
+        ----------
+        colors : list
+            The complete list of colors for each tone, multiplied by the number of octaves.
+        """
+        return tone.getColorsForAllFrequencies(self.colors)
+
+    def getCutoffFrequenciesAsList(self):
+        """Gets all frequencies.
+        Returns
+        ----------
+        frequencies : list
+            The complete list of frequencies, ascending order.
+        """
+        return tone.getFrequenciesAsList()

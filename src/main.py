@@ -7,32 +7,39 @@ sys.path.append('backend/src')
 from configuration import Configuration
 from server import BackEnd
 from core_audio import CoreAudio
-import tone
 
 
 backend = BackEnd()
 audio = CoreAudio()
+#light = Light?()
 
-def onNewConfiguration(config):
-    print("new saved config:")
-    print(config)
-    # audio.configure(...)
-    # TODO: Translate the given notes to frequency bins + colors,
-    # and set all configs to Audio. Use tone.NOTES to create the bins.
+config = backend.getDefaultConfiguration()
 
-def onFrequencyDetected(freq):
-    print(freq)
+def setConfigururation(c):
+    audio.configure(
+        cutoff_freqs=c.getCutoffFrequenciesAsList(),
+        trigger_threshold=c.trigger_threshold,
+        trigger_offset=c.trigger_offset,
+        output_binary=False)
+
+def onNewConfiguration(new_config):
+    print("new saved config", new_config)
+    setConfigururation(new_config)
+    config = new_config
+
+def onFrequencyDetected(frequencies):
+    print(frequencies)
     # TODO
-    # Start light
+    # Use light + config
+    # array of colors: config.getColorsForAllFrequencies()
+    # light.display(...)
 
 backend.register(onNewConfiguration)
 backend.start()
 
 audio.register(onFrequencyDetected)
-# TODO set default config
-audio.configure(cutoff_freqs=tone.getFrequenciesAsList(), output_binary=False)
-#audio.configure(cutoff_freqs=[100, 500, 800, 1500, 3000], output_binary=False)
+#audio.configure(cutoff_freqs=[50, 500, 800, 1500, 3000], output_binary=False)
+setConfigururation(config) # Sets the default config
 audio.start()
-
 
 print("Pireworks started succesfully")
