@@ -1,9 +1,9 @@
 """The main audio processing module"""
 from threading import Thread
 import wave
+import math
 import pyaudio
 import numpy
-import math
 
 # All these values are configurable
 # See below for descriptions of these values
@@ -153,7 +153,7 @@ class CoreAudio():
         if file != None:
             try:
                 self.wave = wave.open(file, 'rb')
-            except:
+            except wave.Error:
                 self.wave = None
         else:
             self.wave = None
