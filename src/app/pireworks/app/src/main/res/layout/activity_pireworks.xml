@@ -20,43 +20,197 @@
         android:textColor="#0000FF"
         android:text="@string/text_bluetooth_off" />
 
-    <TextView
-        android:id="@+id/pireworks_device_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/pireworks_device_name"
-        android:layout_centerHorizontal="true"
-        android:text="000000000" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/pireworks_device_address"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pireworks_received_text" />
+        android:orientation="vertical"
+        android:layout_below="@+id/pireworks_device_name"
+        android:layout_alignParentStart="true">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#EEE">
-            <TextView
-                android:id="@+id/pireworks_device_messages"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:textSize="15sp" />
-        </ScrollView>
+            android:background="#EEE"></ScrollView>
 
-        <Button
-            android:id="@+id/pireworks_send_message_button"
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/pireworks_send_text" />
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/selectB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        android:layout_alignBaseline="@+id/noteB"
+        android:layout_alignBottom="@+id/noteB"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/selectA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        android:layout_alignBaseline="@+id/noteA"
+        android:layout_alignBottom="@+id/noteA"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/selectC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        android:layout_alignBaseline="@+id/noteC"
+        android:layout_alignBottom="@+id/noteC"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/selectD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        android:layout_alignBaseline="@+id/noteD"
+        android:layout_alignBottom="@+id/noteD"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/selectE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        android:layout_alignBaseline="@+id/noteE"
+        android:layout_alignBottom="@+id/noteE"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/selectF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        android:layout_alignBaseline="@+id/noteF"
+        android:layout_alignBottom="@+id/noteF"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/selectG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        android:layout_alignBaseline="@+id/noteG"
+        android:layout_alignBottom="@+id/noteG"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/selectH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        android:layout_alignBaseline="@+id/noteH"
+        android:layout_alignBottom="@+id/noteH"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/noteB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="Note B"
+        android:layout_below="@+id/selectA"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/noteC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="Note C"
+        android:layout_below="@+id/selectB"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/noteD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="Note D"
+        android:layout_below="@+id/selectC"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/noteE"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="Note E"
+        android:layout_below="@+id/selectD"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/noteG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="Note G"
+        android:layout_below="@+id/selectF"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/noteH"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="Note H"
+        android:layout_below="@+id/selectG"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/noteF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="Note F"
+        android:layout_below="@+id/selectE"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="SAVE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/selectH"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="31dp"
+        android:id="@+id/saveButton" />
+
+    <TextView
+        android:text="Threshold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/thresholdText"
+        android:layout_above="@+id/selectA"
+        android:layout_alignParentStart="true"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/noteA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="Note A"
+        android:layout_marginTop="68dp"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number|numberSigned|numberDecimal"
+        android:text="Name"
+        android:ems="10"
+        android:id="@+id/thresholdTextValue"
+        android:layout_below="@+id/pireworks_device_name"
+        android:layout_alignParentEnd="true"
+        android:layout_alignStart="@+id/selectA"
+        android:layout_toEndOf="@+id/saveButton"
+        style="@style/Widget.AppCompat.EditText"
+        android:singleLine="true" />
+
 
 </RelativeLayout>

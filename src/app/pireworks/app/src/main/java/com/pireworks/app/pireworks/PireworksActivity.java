@@ -2,29 +2,36 @@ package com.pireworks.app.pireworks;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
+
 
 public class PireworksActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String EXTRA_DEVICE = "pireworks_bluetooth_device";
 
-    private static final UUID mUUID= UUID.fromString("12a2f831-b43e-4a7e-a850-5ff5143c29a7");
+    private static final UUID mUUID = UUID.fromString("12a2f831-b43e-4a7e-a850-5ff5143c29a7");
 
     private BluetoothDevice mDevice;
 
@@ -33,7 +40,22 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
     private OutputStream mOutputStream;
     private MessageReader mMessageReader;
 
-    private TextView mDeviceMessagesTextView;
+    ArrayList<Integer> selectButtonList;
+
+    private int defaultColorR = 125;
+    private int defaultColorG = 100;
+    private int defaultColorB = 55;
+
+    private int selectedColorRGB;
+
+    private HashMap<String,String> userColorMap;
+
+    final ColorPicker cp = new ColorPicker(PireworksActivity.this, defaultColorR, defaultColorG, defaultColorB);
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +63,32 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_pireworks);
 
         mDevice = getIntent().getExtras().getParcelable(EXTRA_DEVICE);
-        mDeviceMessagesTextView = (TextView) findViewById(R.id.pireworks_device_messages);
 
         TextView deviceNameTextView = (TextView) findViewById(R.id.pireworks_device_name);
-        TextView deviceAddressTextView = (TextView) findViewById(R.id.pireworks_device_address);
-        Button sendButton = (Button) findViewById(R.id.pireworks_send_message_button);
+
+        Button selectA = (Button) findViewById(R.id.selectA);
+        Button selectB = (Button) findViewById(R.id.selectB);
+        Button selectC = (Button) findViewById(R.id.selectC);
+        Button selectD = (Button) findViewById(R.id.selectD);
+        Button selectE = (Button) findViewById(R.id.selectE);
+        Button selectF = (Button) findViewById(R.id.selectF);
+        Button selectG = (Button) findViewById(R.id.selectG);
+        Button selectH = (Button) findViewById(R.id.selectH);
+
+        Button save = (Button) findViewById(R.id.saveButton);
+
+        selectButtonList = new ArrayList<Integer>();
+        selectButtonList.add(R.id.selectA);
+        selectButtonList.add(R.id.selectB);
+        selectButtonList.add(R.id.selectC);
+        selectButtonList.add(R.id.selectD);
+        selectButtonList.add(R.id.selectE);
+        selectButtonList.add(R.id.selectF);
+        selectButtonList.add(R.id.selectG);
+        selectButtonList.add(R.id.selectH);
 
         if (mDevice != null) {
             deviceNameTextView.setText(mDevice.getName());
-            deviceAddressTextView.setText(mDevice.getAddress());
 
 
             try {
@@ -75,7 +114,15 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
         mMessageReader = new MessageReader();
         mMessageReader.start();
 
-        sendButton.setOnClickListener(this);
+        selectA.setOnClickListener(this);
+        selectB.setOnClickListener(this);
+        selectC.setOnClickListener(this);
+        selectD.setOnClickListener(this);
+        selectE.setOnClickListener(this);
+        selectF.setOnClickListener(this);
+        selectG.setOnClickListener(this);
+        selectH.setOnClickListener(this);
+
     }
 
     @Override
@@ -113,19 +160,46 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.pireworks_send_message_button:
-                String message = "numb_" + Math.random();
-                sendMessage(message);
-                break;
+        if ( selectButtonList.contains(Integer.valueOf(view.getId()))){
+            cp.show(); //show colorPicker dialog
+            Button okColor = (Button)cp.findViewById(R.id.okColorButton);
+
+            okColor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+            /* You can get single channel (value 0-255)
+                    selectedColorR = cp.getRed();
+                    selectedColorG = cp.getGreen();
+                    selectedColorB = cp.getBlue();
+             */
+
+            /* Or the android RGB Color (see the android Color class reference) */
+                    selectedColorRGB = cp.getColor();
+                    cp.dismiss();
+                }
+            });
+
+            switch (view.getId()){
+                case R.id.selectA: userColorMap.put("A", String.valueOf(selectedColorRGB));break;
+                case R.id.selectB: userColorMap.put("B", String.valueOf(selectedColorRGB)); break;
+                case R.id.selectC: userColorMap.put("C", String.valueOf(selectedColorRGB)); break;
+                case R.id.selectD: userColorMap.put("D", String.valueOf(selectedColorRGB));break;
+                case R.id.selectE: userColorMap.put("E", String.valueOf(selectedColorRGB)); break;
+                case R.id.selectF: userColorMap.put("F", String.valueOf(selectedColorRGB)); break;
+                case R.id.selectG: userColorMap.put("G", String.valueOf(selectedColorRGB)); break;
+                case R.id.selectH: userColorMap.put("H", String.valueOf(selectedColorRGB)); break;
+            }
+        }
+
+        if(view.getId() == R.id.saveButton){
+            sendMessage(userColorMap);
         }
     }
 
     // HELPER METHODS
-    private void sendMessage(String message) {
-        if (mOutputStream != null && message != null) {
-
-
+    private void sendMessage(HashMap<String,String> userColorMap) {
+        if (mOutputStream != null && userColorMap != null) {
             /**
              * TODO:
              * When requesting the current configuration, use "action" = "get".
@@ -136,8 +210,8 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
              * actual string, so it can appear in the text field.
              */
             JsonObject builder = new JsonObject();
-            builder.addProperty("action", "get");
-            builder.addProperty("random", message);
+            builder.addProperty("action", "set");
+            builder.addProperty("config", userColorMap.toString());
             String jsonMessage = (new Gson()).toJson(builder);
 
             try {
@@ -145,19 +219,55 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            appendMessage("me", message);
+            //appendMessage("me", message);
         }
     }
 
     private void appendMessage(final String from, final String message) {
-        if (mDeviceMessagesTextView != null) {
+        if (false) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mDeviceMessagesTextView.append("\n" + from + ": " + message);
+
                 }
             });
         }
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Pireworks Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 
     class MessageReader extends Thread {
@@ -173,7 +283,7 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
                     String json = new String(buffer, 0, bytes);
 
                     JsonParser jsonParser = new JsonParser();
-                    JsonObject object = (JsonObject)jsonParser.parse(json);
+                    JsonObject object = (JsonObject) jsonParser.parse(json);
 
                     String configName = object.get("name").getAsString();
                     JsonObject colorMap = object.get("colors").getAsJsonObject();
