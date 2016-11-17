@@ -16,7 +16,7 @@ Development & Target hardware is the Raspberry Pi 3 Model B. RGB led lights and 
 
 **OS** : Raspbian
 
-**Tools / Software** : IDLE for python, Fritzing for breadboard layout and PCB Schematic
+**Tools / Software** : IDLE for python, Fritzing for breadboard layout and PCB Schematic, LED strips
 
 http://fritzing.org/home/
 
