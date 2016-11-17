@@ -2,22 +2,20 @@ package com.pireworks.app.pireworks;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
+import com.pireworks.app.pireworks.Helper.BluetoothHelper;
+import com.pireworks.app.pireworks.data.Configuration;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +33,14 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
 
     private BluetoothDevice mDevice;
 
+    private int triggerOffset;
+    private int triggerThreshold;
+    private int amplitudeIntensity;
+    private HashMap<String,String> userColorMap;
+    private Configuration config;
+
+    private BluetoothHelper bluetoothHelper;
+
     private BluetoothSocket mBluetoothSocket;
     private InputStream mInputStream;
     private OutputStream mOutputStream;
@@ -48,14 +54,11 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
 
     private int selectedColorRGB;
 
-    private HashMap<String,String> userColorMap;
+
 
     final ColorPicker cp = new ColorPicker(PireworksActivity.this, defaultColorR, defaultColorG, defaultColorB);
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,8 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
         mDevice = getIntent().getExtras().getParcelable(EXTRA_DEVICE);
 
         TextView deviceNameTextView = (TextView) findViewById(R.id.pireworks_device_name);
+        EditText threshold = (EditText) findViewById(R.id.thresholdInput);
+        EditText offset = (EditText) findViewById(R.id.offsetInput);
 
         Button selectA = (Button) findViewById(R.id.selectA);
         Button selectB = (Button) findViewById(R.id.selectB);
@@ -90,10 +95,9 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
         if (mDevice != null) {
             deviceNameTextView.setText(mDevice.getName());
 
-
             try {
-//                Method method = mDevice.getClass().getMethod("createInsecureRfcommSocket", (Class[]) null);
-//                mBluetoothSocket = (BluetoothSocket) method.invoke(mDevice, (Object[]) null);
+//              Method method = mDevice.getClass().getMethod("createInsecureRfcommSocket", (Class[]) null);
+//              mBluetoothSocket = (BluetoothSocket) method.invoke(mDevice, (Object[]) null);
                 mBluetoothSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
                 mBluetoothSocket.connect();
                 mOutputStream = mBluetoothSocket.getOutputStream();
@@ -123,6 +127,8 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
         selectG.setOnClickListener(this);
         selectH.setOnClickListener(this);
 
+        threshold.setOnClickListener(this);
+        offset.setOnClickListener(this);
     }
 
     @Override
@@ -192,82 +198,31 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
+        if(view.getId() == R.id.thresholdInput)
+            this.triggerThreshold = R.id.thresholdInput;
+
+        if(view.getId() == R.id.offsetInput)
+            this.triggerOffset = R.id.offsetInput;
+
         if(view.getId() == R.id.saveButton){
-            sendMessage(userColorMap);
+            if (this.userColorMap == null)
+                config = new Configuration(this.triggerThreshold,this.triggerOffset,this.amplitudeIntensity);
+            else
+                config = new Configuration(this.triggerThreshold, this.triggerOffset, this.amplitudeIntensity,this.userColorMap);
+            bluetoothHelper.sendMessage(this.mOutputStream,this.config);
         }
     }
 
-    // HELPER METHODS
-    private void sendMessage(HashMap<String,String> userColorMap) {
-        if (mOutputStream != null && userColorMap != null) {
-            /**
-             * TODO:
-             * When requesting the current configuration, use "action" = "get".
-             * If setting a config, use "action" = "set".
-             * When setting a config, the configuration will be expected in a "config" key.
-             *
-             * Note the '(new Gson()).toJson(...)'. This is just to translate a 'json builder' to an
-             * actual string, so it can appear in the text field.
-             */
-            JsonObject builder = new JsonObject();
-            builder.addProperty("action", "set");
-            builder.addProperty("config", userColorMap.toString());
-            String jsonMessage = (new Gson()).toJson(builder);
-
-            try {
-                mOutputStream.write(jsonMessage.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //appendMessage("me", message);
-        }
-    }
-
-    private void appendMessage(final String from, final String message) {
-        if (false) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            });
-        }
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Pireworks Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 
     class MessageReader extends Thread {
@@ -288,7 +243,7 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
                     String configName = object.get("name").getAsString();
                     JsonObject colorMap = object.get("colors").getAsJsonObject();
 
-                    appendMessage(mDevice.getName(), (new Gson()).toJson(object));
+                    bluetoothHelper.appendMessage(mDevice.getName(), (new Gson()).toJson(object));
 
                 } catch (IOException e) {
                     e.printStackTrace();
