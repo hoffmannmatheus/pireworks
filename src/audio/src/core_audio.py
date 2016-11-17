@@ -8,8 +8,8 @@ import numpy
 # All these values are configurable
 # See below for descriptions of these values
 CUTOFF_FREQS = [800, 1500, 3000]
-TRIGGER_THRESHOLD = 150000
-TRIGGER_OFFSET = 150000
+TRIGGER_THRESHOLD = 769239
+TRIGGER_OFFSET = 769239
 SCALED_MAX_VALUE = 255
 OUTPUT_BINARY = True
 CHUNK = 8192
