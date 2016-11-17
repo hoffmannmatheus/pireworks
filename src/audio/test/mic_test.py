@@ -4,7 +4,7 @@ import numpy
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-CHUNK = 512
+CHUNK = 8192
 
 # Open PyAudio
 audio = pyaudio.PyAudio()
@@ -15,6 +15,8 @@ stream = audio.open(format=FORMAT,
                     rate=RATE,
                     input=True,
                     frames_per_buffer=CHUNK)
+
+history = []
 
 try:
     while True:
@@ -35,9 +37,17 @@ try:
         # Convert the sample frequencies into the actual frequencies
         peak_freq = abs(freqs[peak_index] * RATE)
 
+        # Record the peak value
+        history.append(peak_value)
+
         print("The peak frequency is %d with magnitude %d" % (peak_freq, peak_value))
+        
 except KeyboardInterrupt:
     # Cleanup
+    average_peak = int(numpy.average(history))
+
+    print("Recommended Threshold + Recommended Offset = %d" % (average_peak))
+
     stream.stop_stream()
     stream.close()
     audio.terminate()
