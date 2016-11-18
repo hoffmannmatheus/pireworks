@@ -14,7 +14,7 @@ The light module transforms the light codes into actual signals to the light dev
 
 Development & Target hardware is the Raspberry Pi 3 Model B. RGB led lights and simple electronic prototyping tools (eg. breadboards,resistors,jumper cables) will also be needed, but can emulate during development.
 
-** Hardware for LED Strip:
+Hardware for LED Strip:
 
 - WS2812 LED Strip (with 1 pin for 5V DC, 1 pin for data and 1 pin for ground)
 - A breadboard, Jumper Wires(Male to Male and Female to Female)
