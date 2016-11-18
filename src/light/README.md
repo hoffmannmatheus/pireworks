@@ -14,9 +14,15 @@ The light module transforms the light codes into actual signals to the light dev
 
 Development & Target hardware is the Raspberry Pi 3 Model B. RGB led lights and simple electronic prototyping tools (eg. breadboards,resistors,jumper cables) will also be needed, but can emulate during development.
 
+* Hardware for LED Strip:
+- WS2812 LED Strip (with 1 pin for 5V DC, 1 pin for data and 1 pin for ground)
+- A breadboard, Jumper Wires(Male to Male and Female to Female)
+- A level shifter to convert the 3.3V to 5V
+- A power supply, Power jack, 
+
 **OS** : Raspbian
 
-**Tools / Software** : IDLE for python, Fritzing for breadboard layout and PCB Schematic, LED strips
+**Tools / Software** : IDLE for python, Fritzing for breadboard layout and PCB Schematic, WS281X Library
 
 http://fritzing.org/home/
 
@@ -141,3 +147,5 @@ finally:
     GPIO.cleanup()
 ```
 ## WS2812 Strips (Neopixel)
+
+The WS2812 Integrated Light Source or NeoPixel in Adafruit parlance is the latest advance in the quest for a simple, scalable and affordable full-color LED. Red, green and blue LEDs are integrated alongside a driver chip into a tiny surface-mount package controlled through a single wire. They can be used individually, chained into longer strings or assembled into still more interesting form-factors.
