@@ -140,3 +140,4 @@ finally:
     # reset every resources that has been set up by this program
     GPIO.cleanup()
 ```
+## WS2812 Strips (Neopixel)
