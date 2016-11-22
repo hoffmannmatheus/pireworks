@@ -147,10 +147,21 @@ finally:
     # reset every resources that has been set up by this program
     GPIO.cleanup()
 ```
-## WS2812 Strips (Neopixel)
+## Adafruit_Neopixel
 
 The WS2812 Integrated Light Source or NeoPixel in Adafruit parlance is the latest advance in the quest for a simple, scalable and affordable full-color LED. Red, green and blue LEDs are integrated alongside a driver chip into a tiny surface-mount package controlled through a single wire. They can be used individually, chained into longer strings or assembled into still more interesting form-factors.
 
+Controlling NeoPixels “from scratch” is quite a challenge, so we provide a library letting you focus on the fun and interesting bits. The library works with most mainstream Arduino boards and derivatives.
+
+In order to us Adafruit_neopixel throughout the rest of your Python script, you need to put this statement at the top of your file
+
+```python
+from neopixel import *
+```
+Then we can create object of adafruit_neopixel with appropriate configurations like,
+```python
+strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
+```
 ## RGB 150-LED Strip
 
 It is 5-meter long strip contains 150 RGB LEDs that can be individually addressed using a one-wire interface, allowing you full control over the color of each RGB LED. The flexible, waterproof strip runs on 5 V and can be chained with additional WS2812B strips to form longer runs or cut apart between each LED for shorter sections.
@@ -168,4 +179,7 @@ This library and test program set the clock rate of the PWM controller to 3X the
 Bit 1 - 1 1 0
 Bit 0 - 1 0 0
 ```
-
+According to bit inputs, three arguments are the pixel color, expressed as red, green and blue brightness levels, where 0 is dimmest (off) and 255 is maximum brightness so we call the function and set bit values regarding to the brightness level. For example, For the blue color we will set parameters like this,
+```python
+colorWipe(strip, Color(0, 0, 255))
+```
