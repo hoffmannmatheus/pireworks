@@ -150,3 +150,22 @@ finally:
 ## WS2812 Strips (Neopixel)
 
 The WS2812 Integrated Light Source or NeoPixel in Adafruit parlance is the latest advance in the quest for a simple, scalable and affordable full-color LED. Red, green and blue LEDs are integrated alongside a driver chip into a tiny surface-mount package controlled through a single wire. They can be used individually, chained into longer strings or assembled into still more interesting form-factors.
+
+## RGB 150-LED Strip
+
+It is 5-meter long strip contains 150 RGB LEDs that can be individually addressed using a one-wire interface, allowing you full control over the color of each RGB LED. The flexible, waterproof strip runs on 5 V and can be chained with additional WS2812B strips to form longer runs or cut apart between each LED for shorter sections.
+
+## Overview
+
+These flexible RGB LED strips are an easy way to add complex lighting effects to a project. Each LED has an integrated driver that allows you to control the color and brightness of each LED independently. The combined LED/driver IC on these strips is the extremely compact WS2812B, which enables higher LED densities. In the strip, you can actually see the integrated driver and the bonding wires connecting it to the green, red, and blue LEDs, which are on at their dimmest setting.
+
+## Background
+
+The BCM2835 in the Raspberry Pi has a PWM module that is well suited to driving individually controllable WS281X LEDs. Using the DMA, PWM FIFO, and serial mode in the PWM, it's possible to control almost any number of WS281X LEDs in a chain connected to the PWM output pin.
+This library and test program set the clock rate of the PWM controller to 3X the desired output frequency and creates a bit pattern in RAM from an array of colors where each bit is represented by 3 bits for the PWM controller as follows.
+
+```python
+Bit 1 - 1 1 0
+Bit 0 - 1 0 0
+```
+
