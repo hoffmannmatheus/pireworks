@@ -162,6 +162,9 @@ Then we can create object of adafruit_neopixel with appropriate configurations l
 ```python
 strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
 ```
+Where, LED_COUNT will be number of LED that we want to blink,
+       LED_PIN is number of PWM pin that is connected with the raspberry pi.
+       
 ## RGB 150-LED Strip
 
 It is 5-meter long strip contains 150 RGB LEDs that can be individually addressed using a one-wire interface, allowing you full control over the color of each RGB LED. The flexible, waterproof strip runs on 5 V and can be chained with additional WS2812B strips to form longer runs or cut apart between each LED for shorter sections.
