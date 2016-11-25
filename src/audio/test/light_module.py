@@ -83,12 +83,32 @@ def start(light_color):
 	strip.begin()
 
 		# Color wipe animations.
-	if light_color=="blue":
+	if light_color=='blue':
 	   colorWipe(strip, Color(0, 0, 255))  # blue wipe
 	elif light_color=='red': 
 	   colorWipe(strip, Color(0, 255, 0))  # Red wipe
 	elif light_color=='green':
 	   colorWipe(strip, Color(255, 0, 0))  # Green wipe
+	
+
+
+	elif light_color=='green':
+	   colorWipe(strip, Color(128, 0, 128))
+	elif light_color=='green':
+	   colorWipe(strip, Color(128, 0, 128))
+	elif light_color=='green':
+	   colorWipe(strip, Color(128, 0, 128))
+	elif light_color=='green':
+	   colorWipe(strip, Color(128, 0, 128))
+	elif light_color=='green':
+	   colorWipe(strip, Color(128, 0, 128))
+	elif light_color=='green':
+	   colorWipe(strip, Color(128, 0, 128))
+	elif light_color=='green':
+	   colorWipe(strip, Color(128, 0, 128))
+	elif light_color=='green':
+	   colorWipe(strip, Color(128, 0, 128))
+
 
 
 
