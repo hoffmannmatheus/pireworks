@@ -75,11 +75,11 @@ while RUN is True:
 
 #light strip code start here:
     if red==1 and green!=1:
-	light_module.start("red")
+        light_module.start("red")
     elif green==1 and blue!=1:
-	light_module.start('green')
+	    light_module.start('green')
     else:
-	light_module.start('blue')
+	    light_module.start('blue')
 
 
 
