@@ -46,10 +46,10 @@ class LightInput():
             try:
                 if values[index]==1 and values[index+1]==0:
                     sequence=COLOR_MAP[self.COLOR_SEQUENCE[index]]
-                    colorWipe(strip,Color(sequence[0],sequence[1],sequence[2]))
+                    self.colorWipe(strip,Color(sequence[0],sequence[1],sequence[2]))
             except:
                 sequence=COLOR_MAP[self.COLOR_SEQUENCE[-1]]
-                colorWipe(strip,Color(sequence[0],sequence[1],sequence[2]))
+                self.colorWipe(strip,Color(sequence[0],sequence[1],sequence[2]))
 
     def startStrip(self)
         strip = Adafruit_NeoPixel(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ, self.LED_DMA, self.LED_INVERT, self.LED_BRIGHTNESS)
