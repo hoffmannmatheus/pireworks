@@ -4,6 +4,7 @@
 - RPi GPIO
   * Features
 - GPIO PWM
+- [RGB_LED_Strip](https://github.com/hoffmannmatheus/pireworks/blob/master/src/light/RGB_LED_Strip.md)
 
 ## Overview
 
@@ -25,14 +26,14 @@ Hardware for LED Strip:
 
 **Tools / Software** : IDLE for python, Fritzing for breadboard layout and PCB Schematic, WS281X Library
 
-http://fritzing.org/home/
+[FRITZING](http://fritzing.org/home/)
 
-https://www.python.org/downloads/
+[PYTHON](https://www.python.org/downloads/)
 
 ## Rpi.GPIO 
-https://pythonhosted.org/RPIO/index.html
+[RPIO Documentation](https://pythonhosted.org/RPIO/index.html)
 
-https://sourceforge.net/projects/raspberry-gpio-python/
+[Raspberri Pi GPIO examples](https://sourceforge.net/projects/raspberry-gpio-python/)
 
 RPi.GPIO module is the driving force behind our Python examples. This set of Python files and source is included with Raspbian, so assuming you’re running that most popular Linux distribution, you don’t need to download anything to get started.
 
@@ -110,26 +111,15 @@ To adjust the value of the PWM output, use the pwm.ChangeDutyCycle([duty cycle])
 `example`
 
 ```python
-# set up GPIO BOARD numbering scheme
-GPIO.setmode(GPIO.BOARD)
-
-# set GPIO pin as output
-GPIO.setup(22, GPIO.OUT)
-GPIO.setup(18, GPIO.OUT)
-
 #  create PWm Instance
 white = GPIO.PWM(22, 100)
 red = GPIO.PWM(18, 100)
 
 #  start PWM
 white.start(0)
-
-#  set PWM pin up with a frequency of 1kHz
-#  and set that output to a 100% duty cycle.
-red.start(100)
+red.start(100) # set PWM pin up with a frequency of 1kHz and set that output to a 100% duty cycle.
 
 pause_time = 0.02
-
 try:
     while True:
         for i in range(0,101):
@@ -141,48 +131,7 @@ try:
             red.ChangeDutyCycle(100-i)
             sleep(pause_time) # wait 0.02 seconds
 finally:
-    #  stop PWM
-    white.stop()
+    white.stop() #  stop PWM
     red.stop()
-    # reset every resources that has been set up by this program
-    GPIO.cleanup()
-```
-## Adafruit_Neopixel
-
-The WS2812 Integrated Light Source or NeoPixel in Adafruit parlance is the latest advance in the quest for a simple, scalable and affordable full-color LED. Red, green and blue LEDs are integrated alongside a driver chip into a tiny surface-mount package controlled through a single wire. They can be used individually, chained into longer strings or assembled into still more interesting form-factors.
-
-Controlling NeoPixels “from scratch” is quite a challenge, so we provide a library letting you focus on the fun and interesting bits. The library works with most mainstream Arduino boards and derivatives.
-
-In order to us Adafruit_neopixel throughout the rest of your Python script, you need to put this statement at the top of your file
-
-```python
-from neopixel import *
-```
-Then we can create object of adafruit_neopixel with appropriate configurations like,
-```python
-strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
-```
-Where, LED_COUNT will be number of LED that we want to blink,
-       LED_PIN is number of PWM pin that is connected with the raspberry pi.
-       
-## RGB 150-LED Strip
-
-It is 5-meter long strip contains 150 RGB LEDs that can be individually addressed using a one-wire interface, allowing you full control over the color of each RGB LED. The flexible, waterproof strip runs on 5 V and can be chained with additional WS2812B strips to form longer runs or cut apart between each LED for shorter sections.
-
-## Overview
-
-These flexible RGB LED strips are an easy way to add complex lighting effects to a project. Each LED has an integrated driver that allows you to control the color and brightness of each LED independently. The combined LED/driver IC on these strips is the extremely compact WS2812B, which enables higher LED densities. In the strip, you can actually see the integrated driver and the bonding wires connecting it to the green, red, and blue LEDs, which are on at their dimmest setting.
-
-## Background
-
-The BCM2835 in the Raspberry Pi has a PWM module that is well suited to driving individually controllable WS281X LEDs. Using the DMA, PWM FIFO, and serial mode in the PWM, it's possible to control almost any number of WS281X LEDs in a chain connected to the PWM output pin.
-This library and test program set the clock rate of the PWM controller to 3X the desired output frequency and creates a bit pattern in RAM from an array of colors where each bit is represented by 3 bits for the PWM controller as follows.
-
-```python
-Bit 1 - 1 1 0
-Bit 0 - 1 0 0
-```
-According to bit inputs, three arguments are the pixel color, expressed as red, green and blue brightness levels, where 0 is dimmest (off) and 255 is maximum brightness so we call the function and set bit values regarding to the brightness level. For example, For the blue color we will set parameters like this,
-```python
-colorWipe(strip, Color(0, 0, 255))
+    GPIO.cleanup() # reset every resources that has been set up by this program    
 ```
