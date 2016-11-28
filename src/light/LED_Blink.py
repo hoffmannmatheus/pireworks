@@ -18,7 +18,7 @@ try:
     while count < blinkCnt:
         GPIO.output(pin, True)  # set gpio pin to high
         print("LED ON")
-        sleep(3)    # wait 1 seconds
+        sleep(3)    # wait 3 seconds
         GPIO.output(pin, False)  # set gpio pin to low
         print("LED OFF")
         sleep(1)   # wait 1 seconds
