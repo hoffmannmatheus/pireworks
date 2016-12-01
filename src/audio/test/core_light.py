@@ -4,9 +4,9 @@ from neopixel import *
 LED_COUNT = 50      # Number of LED pixels.
 LED_PIN = 18      # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
-LED_DMA = 5       # DMA channel to use for generating signal (try 5)
+LED_DMA = 5       # DMA channel to use for generating signal (0-14)
 LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
-# True to invert the signal (when using NPN transistor level shift)
+# True to invert the signal (when using voltage level shifter)
 LED_INVERT = False
 COLOR_MAP={'red':(0, 255, 0),'green':(255, 0, 0),'blue':(0, 0, 255),'teal':(128, 0, 128),'purple':(0,128,128),'aquamarine':(255,127,212),'indigo':(0,55,155),'blueviolet':(0,55,55),'pink':(0,120,30),'springgreen':(200,50,50)}
 COLOR_SEQUENCE=['red','green','blue','teal','purple','aquamarine','indigo','blueviolet','pink','springgreen']
