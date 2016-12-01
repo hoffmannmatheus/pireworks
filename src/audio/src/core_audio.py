@@ -1,9 +1,10 @@
 """The main audio processing module"""
 from threading import Thread
 import wave
-import math
-import pyaudio
-import numpy
+from math import ceil
+from pyaudio import PyAudio, paInt16
+from numpy import fromstring, fft, argmax, int16
+from numpy import abs as npabs
 
 # All these values are configurable
 # See below for descriptions of these values
@@ -14,6 +15,7 @@ SCALED_MAX_VALUE = 255
 OUTPUT_BINARY = True
 CHUNK = 8192
 RATE = 44100
+
 
 class _AudioInput(Thread):
     """The (internal) audio input processing thread"""
@@ -58,7 +60,7 @@ class _AudioInput(Thread):
                 if fft_value < scaled_max:
                     scaled_value = (scaled_max - fft_value) / scaled_max
                     scaled_value *= self.scaled_max_value
-                    peak_values.append(math.ceil(scaled_value))
+                    peak_values.append(ceil(scaled_value))
                 else:
                     peak_values.append(self.scaled_max_value)
 
@@ -68,7 +70,8 @@ class _AudioInput(Thread):
             if self.wav is None:
                 # Read audio samples from input device
                 try:
-                    data = numpy.fromstring(self.stream.read(self.chunk_size), dtype=numpy.int16)
+                    data = fromstring(self.stream.read(self.chunk_size),
+                                      dtype=int16)
                 except BufferError:
                     # Buffer errors are not fatal, continue
                     continue
@@ -77,11 +80,12 @@ class _AudioInput(Thread):
                 if self.wav.tell() >= self.wav.getnframes():
                     self.wav.rewind()
 
-                data = numpy.fromstring(self.wav.readframes(self.chunk_size), dtype=numpy.int16)
+                data = fromstring(self.wav.readframes(self.chunk_size),
+                                  dtype=int16)
 
             # Convert signal to frequency domain and prepare bins
-            fft = numpy.fft.fft(data)
-            fft_bins = len(fft)
+            fft_data = fft.fft(data)
+            fft_bins = len(fft_data)
             bin_resolution = self.rate / fft_bins
 
             indicies = []
@@ -91,30 +95,31 @@ class _AudioInput(Thread):
             # Find the peak frequencies and magnitudes
             peak_values = []
             for index, value in enumerate(indicies):
-                fft_index = 0
-                if index is 0:
-                    fft_index = numpy.argmax(numpy.abs(fft[:value]))
-                else:
-                    fft_index = numpy.argmax(numpy.abs(fft[indicies[index - 1]:value]))
+                index_offset = 0
+                value_offset = 0
 
-                fft_value = 0
-                if index is 0:
-                    fft_value = numpy.abs(fft[fft_index])
-                else:
-                    fft_value = numpy.abs(fft[indicies[index - 1] + fft_index])
+                if index != 0:
+                    index_offset = indicies[index - 1]
+
+                if index != 0:
+                    value_offset = indicies[index - 1]
+
+                fft_index = argmax(npabs(fft_data[index_offset:value]))
+                fft_value = npabs(fft_data[fft_index + value_offset])
 
                 self.process_value(fft_value, peak_values)
 
             # Process the last bin, which has a variable bin width based on
             # the number of cutoff frequencies
-            upper_bound = int((len(fft) - indicies[-1]) / 2)
+            upper_bound = int((len(fft_data) - indicies[-1]) / 2)
 
-            fft_index = numpy.argmax(numpy.abs(fft[indicies[-1]:upper_bound]))
-            fft_value = numpy.abs(fft[indicies[-1] + fft_index])
+            fft_index = argmax(npabs(fft_data[indicies[-1]:upper_bound]))
+            fft_value = npabs(fft_data[indicies[-1] + fft_index])
 
             self.process_value(fft_value, peak_values)
 
             self.callback(peak_values)
+
 
 class CoreAudio():
     """This class controls the audio processing thread
@@ -122,10 +127,12 @@ class CoreAudio():
     The order of operations must be as follows:
     1. Create class isinstance
     2. Register your callback function via the register() operation
-    3. (Optional) Configure your desired parameters via the configure() operation
+    3. (Optional) Configure your desired parameters via the configure()
+       operation
     4. Invoke the start() operation
 
-    *Note* If it is desired to re-configure the audio the following operations must be performed:
+    *Note* If it is desired to re-configure the audio the following operations
+    must be performed:
     1. Invoke the stop() operation
     2. Configure the desired paramters via the configure() operation
     3. Invoke the start() operation
@@ -135,7 +142,7 @@ class CoreAudio():
         If a file is present an attempt will be made to open and use as input
     """
     def __init__(self, file=None):
-        self.format = pyaudio.paInt16
+        self.format = paInt16
         self.channels = 1
         self.run = True
         self.callback = None
@@ -146,18 +153,17 @@ class CoreAudio():
         self.rate = RATE
         self.chunk_size = CHUNK
         self.output_binary = OUTPUT_BINARY
-        self.audio = pyaudio.PyAudio()
+        self.audio = PyAudio()
         self.stream = None
         self.thread = None
 
-        if file != None:
+        if file is not None:
             try:
                 self.wave = wave.open(file, 'rb')
             except wave.Error:
                 self.wave = None
         else:
             self.wave = None
-
 
     def register(self, callback):
         """Register a callback function. This object will be called
@@ -192,12 +198,14 @@ class CoreAudio():
         trigger_threshold : int
             The magnitude of signal needed to produce a "ON" signal
         trigger_offset : int
-            The offset to apply to trigger_threshold to determine the scaled output value
+            The offset to apply to trigger_threshold to determine the
+            scaled output value
         scaled_max_value : int
             The max scaled output value
         rate : int
             The sampling rate in Hz. Modification of this value should
-            correspond to hardware configuration changes. Currently only support 44.1 kHz
+            correspond to hardware configuration changes. Currently only
+            support 44.1 kHz
         chunk_size : int
             The number of samples processed per loop. Only adjust if
             buffer underflows are detected
@@ -259,5 +267,6 @@ class CoreAudio():
 
     def join(self):
         """Blocks the calling thread until audio exits. This function must
-        be called after audio is started for processing to continue indefinetly"""
+        be called after audio is started for processing to continue
+        indefinetly"""
         self.thread.join()
