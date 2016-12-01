@@ -3,14 +3,15 @@
 ## Overview
 
 The audio processor is entirely controlled by the `CoreAudio` class.
-See the comments in the code for a full description of the functions and variables. 
-In order to use this class perform the following operations:
+See the comments in the code for a full description of the functions and variables, reference the following for a brief overview:
+
 1. Create class instance
 2. Register your callback function via the `register()` operation
 3. (Optional) Configure your desired parameters via the `configure()` operation
 4. Invoke the `start()` operation
 
 *Note* If it is desired to re-configure the audio the following operations must be performed:
+
 1. Invoke the `stop()` operation
 2. Configure the desired paramters via the `configure()` operation
 3. Invoke the `start()` operation
