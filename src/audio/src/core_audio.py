@@ -66,8 +66,8 @@ class _AudioInput(Thread):
         """The thread function"""
         while self.running is True:
             if self.wav is None:
+                # Read audio samples from input device
                 try:
-                    # Read audio samples from the audio stream
                     data = numpy.fromstring(self.stream.read(self.chunk_size), dtype=numpy.int16)
                 except BufferError:
                     # Buffer errors are not fatal, continue
@@ -79,11 +79,9 @@ class _AudioInput(Thread):
 
                 data = numpy.fromstring(self.wav.readframes(self.chunk_size), dtype=numpy.int16)
 
-            # Take the FFT of the data
+            # Convert signal to frequency domain and prepare bins
             fft = numpy.fft.fft(data)
             fft_bins = len(fft)
-
-            # Bin the data based on provided cutoff values
             bin_resolution = self.rate / fft_bins
 
             indicies = []
@@ -107,8 +105,10 @@ class _AudioInput(Thread):
 
                 self.process_value(fft_value, peak_values)
 
-            # The last bin
+            # Process the last bin, which has a variable bin width based on
+            # the number of cutoff frequencies
             upper_bound = int((len(fft) - indicies[-1]) / 2)
+
             fft_index = numpy.argmax(numpy.abs(fft[indicies[-1]:upper_bound]))
             fft_value = numpy.abs(fft[indicies[-1] + fft_index])
 
@@ -160,7 +160,9 @@ class CoreAudio():
 
 
     def register(self, callback):
-        """Register a callback function
+        """Register a callback function. This object will be called
+        after the audio thread processes a chunk of audio samples. This
+        function will be called at the rate of CHUNK / RATE seconds.
         Parameters
         ----------
         callback : function
@@ -170,7 +172,7 @@ class CoreAudio():
         self.callback = callback
 
     def deregister(self):
-        """Delete registered callback function"""
+        """Remove registered callback function"""
         self.callback = None
 
     def configure(self,
@@ -231,15 +233,15 @@ class CoreAudio():
                                       frames_per_buffer=self.chunk_size)
 
         self.thread = _AudioInput(self.stream,
-                                 self.wave,
-                                 self.callback,
-                                 self.cutoff_freqs,
-                                 self.trigger_threshold,
-                                 self.trigger_offset,
-                                 self.scaled_max_value,
-                                 self.rate,
-                                 self.chunk_size,
-                                 self.output_binary)
+                                  self.wave,
+                                  self.callback,
+                                  self.cutoff_freqs,
+                                  self.trigger_threshold,
+                                  self.trigger_offset,
+                                  self.scaled_max_value,
+                                  self.rate,
+                                  self.chunk_size,
+                                  self.output_binary)
 
         self.thread.start()
 
@@ -256,5 +258,6 @@ class CoreAudio():
         self.thread = None
 
     def join(self):
-        """Blocks the calling thread until audio exits"""
+        """Blocks the calling thread until audio exits. This function must
+        be called after audio is started for processing to continue indefinetly"""
         self.thread.join()
