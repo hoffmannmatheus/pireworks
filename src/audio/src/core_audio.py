@@ -15,8 +15,8 @@ OUTPUT_BINARY = True
 CHUNK = 8192
 RATE = 44100
 
-class AudioInput(Thread):
-    """The audio input processing thread"""
+class _AudioInput(Thread):
+    """The (internal) audio input processing thread"""
     def __init__(self,
                  stream,
                  wav,
@@ -230,7 +230,7 @@ class CoreAudio():
                                       input=True,
                                       frames_per_buffer=self.chunk_size)
 
-        self.thread = AudioInput(self.stream,
+        self.thread = _AudioInput(self.stream,
                                  self.wave,
                                  self.callback,
                                  self.cutoff_freqs,
