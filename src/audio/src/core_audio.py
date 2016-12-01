@@ -1,6 +1,7 @@
 """The main audio processing module"""
 from threading import Thread
-import wave
+from wave import Error as WavError
+from wave import open as wavopen
 from math import ceil
 from pyaudio import PyAudio, paInt16
 from numpy import fromstring, fft, argmax, int16
@@ -18,7 +19,9 @@ RATE = 44100
 
 
 class _AudioInput(Thread):
-    """The (internal) audio input processing thread"""
+    """The (internal) audio input processing thread
+    Do not use this class directly, instead create a
+    CoreAudio as defined below"""
     def __init__(self,
                  stream,
                  wav,
@@ -159,8 +162,8 @@ class CoreAudio():
 
         if file is not None:
             try:
-                self.wave = wave.open(file, 'rb')
-            except wave.Error:
+                self.wave = wavopen(file, 'rb')
+            except WavError:
                 self.wave = None
         else:
             self.wave = None
