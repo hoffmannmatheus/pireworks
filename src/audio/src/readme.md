@@ -75,7 +75,7 @@ a.stop()
 a.configure(cutoff_freqs=[500,1000,1500,2000,2500],
             trigger_threshold=1000,
             trigger_offset=1000,
-            scaled_max_value=255
+            scaled_max_value=255,
             output_binary=False)
 
 # Restart processing
