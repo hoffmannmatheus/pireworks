@@ -9,8 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -29,9 +29,12 @@ public class HomeActivity extends AppCompatActivity {
 
     private ProgressDialog mProgressDlg;
 
-    private ArrayList<BluetoothDevice> mDeviceList = new ArrayList<BluetoothDevice>();
+    private ArrayList<BluetoothDevice> mDeviceList;
 
     private BluetoothAdapter mBluetoothAdapter;
+
+    IntentFilter filter;
+
 
     @Override
     
@@ -100,6 +103,7 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View arg0) {
                     mBluetoothAdapter.startDiscovery();
+
                 }
             });
 
@@ -108,7 +112,6 @@ public class HomeActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mBluetoothAdapter.isEnabled()) {
                         mBluetoothAdapter.disable();
-
                         showDisabled();
                     } else {
                         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -124,7 +127,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
 
-        IntentFilter filter = new IntentFilter();
+        filter = new IntentFilter();
 
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         filter.addAction(BluetoothDevice.ACTION_FOUND);
@@ -132,6 +135,7 @@ public class HomeActivity extends AppCompatActivity {
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
         registerReceiver(mReceiver, filter);
+
     }
 
     @Override
@@ -219,22 +223,26 @@ public class HomeActivity extends AppCompatActivity {
 
                     showEnabled();
                 }
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
-                mDeviceList = new ArrayList<BluetoothDevice>();
-
+            }
+            if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                mDeviceList = new ArrayList();
                 mProgressDlg.show();
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                mProgressDlg.dismiss();
-
-                Intent newIntent = new Intent(HomeActivity.this, DeviceListActivity.class);
-                newIntent.putParcelableArrayListExtra(DeviceListActivity.EXTRA_DEVICE_LIST, mDeviceList);
-                startActivity(newIntent);
-            } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
+            }
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 mDeviceList.add(device);
-
                 showToast("Found device " + device.getName());
+            }
+            if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                mProgressDlg.dismiss();
+                if (!mDeviceList.isEmpty()){
+                    Intent newIntent = new Intent(HomeActivity.this, DeviceListActivity.class);
+                    newIntent.putParcelableArrayListExtra(DeviceListActivity.EXTRA_DEVICE_LIST, mDeviceList);
+                    startActivity(newIntent);
+                }
+                else{
+                    showToast("No devices found!");
+                }
             }
         }
     };

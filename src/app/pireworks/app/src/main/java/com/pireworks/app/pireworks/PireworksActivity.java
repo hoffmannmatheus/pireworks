@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
 import com.pireworks.app.pireworks.Helper.BluetoothHelper;
 import com.pireworks.app.pireworks.data.Configuration;
 
@@ -23,6 +22,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+
+import petrov.kristiyan.colorpicker.ColorPicker;
 
 
 public class PireworksActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,17 +49,8 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
 
     ArrayList<Integer> selectButtonList;
 
-    private int defaultColorR = 125;
-    private int defaultColorG = 100;
-    private int defaultColorB = 55;
-
-    private int selectedColorRGB;
-
-
-
-    final ColorPicker cp = new ColorPicker(PireworksActivity.this, defaultColorR, defaultColorG, defaultColorB);
-
-
+    protected int chosenColor;
+    private ColorPicker colorPicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +62,7 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
         TextView deviceNameTextView = (TextView) findViewById(R.id.pireworks_device_name);
         EditText threshold = (EditText) findViewById(R.id.thresholdInput);
         EditText offset = (EditText) findViewById(R.id.offsetInput);
+        EditText intensity = (EditText) findViewById(R.id.intensityInput);
 
         Button selectA = (Button) findViewById(R.id.selectA);
         Button selectB = (Button) findViewById(R.id.selectB);
@@ -83,14 +76,11 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
         Button save = (Button) findViewById(R.id.saveButton);
 
         selectButtonList = new ArrayList<Integer>();
-        selectButtonList.add(R.id.selectA);
-        selectButtonList.add(R.id.selectB);
-        selectButtonList.add(R.id.selectC);
-        selectButtonList.add(R.id.selectD);
-        selectButtonList.add(R.id.selectE);
-        selectButtonList.add(R.id.selectF);
-        selectButtonList.add(R.id.selectG);
-        selectButtonList.add(R.id.selectH);
+        createButtonList();
+
+        colorPicker = new ColorPicker(this);
+        colorPicker.setColors(R.array.default_colors);
+        colorPicker.setColumns(5);
 
         if (mDevice != null) {
             deviceNameTextView.setText(mDevice.getName());
@@ -131,6 +121,17 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
         offset.setOnClickListener(this);
     }
 
+    private void createButtonList() {
+        selectButtonList.add(R.id.selectA);
+        selectButtonList.add(R.id.selectB);
+        selectButtonList.add(R.id.selectC);
+        selectButtonList.add(R.id.selectD);
+        selectButtonList.add(R.id.selectE);
+        selectButtonList.add(R.id.selectF);
+        selectButtonList.add(R.id.selectG);
+        selectButtonList.add(R.id.selectH);
+    }
+
     @Override
     protected void onDestroy() {
         if (mBluetoothSocket != null) {
@@ -167,34 +168,30 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View view) {
         if ( selectButtonList.contains(Integer.valueOf(view.getId()))){
-            cp.show(); //show colorPicker dialog
-            Button okColor = (Button)cp.findViewById(R.id.okColorButton);
+            colorPicker.show(); //show colorPicker dialog
 
-            okColor.setOnClickListener(new View.OnClickListener() {
+            colorPicker.setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
+
                 @Override
-                public void onClick(View v) {
+                public void onChooseColor(int position,int color) {
+                    chosenColor = color;
+                }
 
-            /* You can get single channel (value 0-255)
-                    selectedColorR = cp.getRed();
-                    selectedColorG = cp.getGreen();
-                    selectedColorB = cp.getBlue();
-             */
-
-            /* Or the android RGB Color (see the android Color class reference) */
-                    selectedColorRGB = cp.getColor();
-                    cp.dismiss();
+                @Override
+                public void onCancel(){
+                    colorPicker.dismissDialog();
                 }
             });
 
             switch (view.getId()){
-                case R.id.selectA: userColorMap.put("A", String.valueOf(selectedColorRGB));break;
-                case R.id.selectB: userColorMap.put("B", String.valueOf(selectedColorRGB)); break;
-                case R.id.selectC: userColorMap.put("C", String.valueOf(selectedColorRGB)); break;
-                case R.id.selectD: userColorMap.put("D", String.valueOf(selectedColorRGB));break;
-                case R.id.selectE: userColorMap.put("E", String.valueOf(selectedColorRGB)); break;
-                case R.id.selectF: userColorMap.put("F", String.valueOf(selectedColorRGB)); break;
-                case R.id.selectG: userColorMap.put("G", String.valueOf(selectedColorRGB)); break;
-                case R.id.selectH: userColorMap.put("H", String.valueOf(selectedColorRGB)); break;
+                case R.id.selectA: userColorMap.put("A", String.valueOf(chosenColor));break;
+                case R.id.selectB: userColorMap.put("B", String.valueOf(chosenColor)); break;
+                case R.id.selectC: userColorMap.put("C", String.valueOf(chosenColor)); break;
+                case R.id.selectD: userColorMap.put("D", String.valueOf(chosenColor));break;
+                case R.id.selectE: userColorMap.put("E", String.valueOf(chosenColor)); break;
+                case R.id.selectF: userColorMap.put("F", String.valueOf(chosenColor)); break;
+                case R.id.selectG: userColorMap.put("G", String.valueOf(chosenColor)); break;
+                case R.id.selectH: userColorMap.put("H", String.valueOf(chosenColor)); break;
             }
         }
 
@@ -203,6 +200,9 @@ public class PireworksActivity extends AppCompatActivity implements View.OnClick
 
         if(view.getId() == R.id.offsetInput)
             this.triggerOffset = R.id.offsetInput;
+
+        if(view.getId() == R.id.intensityInput)
+            this.amplitudeIntensity = R.id.intensityInput;
 
         if(view.getId() == R.id.saveButton){
             if (this.userColorMap == null)
