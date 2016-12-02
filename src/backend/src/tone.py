@@ -12,13 +12,13 @@ NOTES = {
     "B" : [494, 988, 1975, 3951, 7902]
 }
 DEFAULT_COLOR_MAP = {
-    "C" : "FF0000",
-    "D" : "FFFF00",
-    "E" : "FF00FF",
-    "F" : "FFFFFF",
-    "G" : "00FFFF",
-    "A" : "0000FF",
-    "B" : "FF0FF0"
+    "C" : "red",
+    "D" : "green",
+    "E" : "blue",
+    "F" : "teal",
+    "G" : "purple",
+    "A" : "aquamarine",
+    "B" : "indigo"
 }
 
 def toColorMap(color_list):

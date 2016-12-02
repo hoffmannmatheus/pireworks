@@ -33,11 +33,11 @@ REPLACE INTO configuration (
 	0,  			  	-- id
 	1,					-- is_default
 	"default",			-- name
-	"FF0000,FFFF00,FF00FF,FFFFFF,00FFFF,0000FF,FF0FF0",	-- colors, should be comma separated values, in the correct TONE order (C, D, E, F, G, A, B) 
+	"red,green,blue,teal,purple,aquamarine,indigo",	-- colors, should be comma separated values, in the correct TONE order (C, D, E, F, G, A, B) 
 	150000,				-- trigger_threshold
 	100,				-- trigger_offset
 	255,				-- scaled_max_value
-	0,					-- output_binary
+	1,					-- output_binary
 	8192,				-- chunk
 	44100				-- rate
 );
