@@ -75,7 +75,7 @@ class _AudioInput(Thread):
                 try:
                     data = fromstring(self.stream.read(self.chunk_size),
                                       dtype=int16)
-                except BufferError:
+                except:
                     # Buffer errors are not fatal, continue
                     continue
             else:
