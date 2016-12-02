@@ -11,47 +11,52 @@ LED_INVERT = False
 COLOR_MAP={'red':(0, 255, 0),'green':(255, 0, 0),'blue':(0, 0, 255),'teal':(128, 0, 128),'purple':(0,128,128),'aquamarine':(255,127,212),'indigo':(0,55,155),'blueviolet':(0,55,55),'pink':(0,120,30),'springgreen':(200,50,50)}
 COLOR_SEQUENCE=['red','green','blue','teal','purple','aquamarine','indigo','blueviolet','pink','springgreen']
 
-
 class LightInput():
 
+    strip = None
+
     def __init__(self,
-                 LED_COUNT,
-                 LED_PIN,
-                 LED_FREQ_HZ,
-                 LED_DMA,
-                 LED_BRIGHTNESS,
-                 LED_INVERT
-                 COLOR_MAP
-                 COLOR_SEQUENCE):
-        self.LED_COUNT = LED_COUNT
-        self.LED_PIN = LED_PIN
-        self.LED_FREQ_HZ = LED_FREQ_HZ
-        self.LED_DMA = LED_DMA
-        self.LED_BRIGHTNESS = LED_BRIGHTNESS
-        self.LED_INVERT = LED_INVERT
-        self.COLOR_MAP=COLOR_MAP
-        self.COLOR_SEQUENCE=COLOR_SEQUENCE
+                 led_count=LED_COUNT,
+                 led_pin=LED_PIN,
+                 led_freq=LED_FREQ_HZ,
+                 led_dma=LED_DMA,
+                 led_brightness=LED_BRIGHTNESS,
+                 led_invert=LED_INVERT,
+                 color_map=COLOR_MAP,
+                 color_seq=COLOR_SEQUENCE):
+        self.LED_COUNT = led_count
+        self.LED_PIN = led_pin
+        self.LED_FREQ_HZ = led_freq
+        self.LED_DMA = led_dma
+        self.LED_BRIGHTNESS = led_brightness
+        self.LED_INVERT = led_invert
+        self.COLOR_MAP=color_map
+        self.COLOR_SEQUENCE=color_seq
 
-    def colorWipe(self,strip,color):
+    def colorWipe(self, color):
         """Wipe color across display a pixel at a time."""
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i, color)
-            strip.show()
+        for i in range(self.strip.numPixels()):
+            self.strip.setPixelColor(i, color)
+            self.strip.show()
 
-
-    def colorMap(self,strip,values)
+    def colorMap(self, values):
         # Map output to colors
 
         for index in range(len(values)):
             try:
                 if values[index]==1 and values[index+1]==0:
                     sequence=COLOR_MAP[self.COLOR_SEQUENCE[index]]
-                    self.colorWipe(strip,Color(sequence[0],sequence[1],sequence[2]))
+                    self.colorWipe(Color(sequence[0],sequence[1],sequence[2]))
             except:
                 sequence=COLOR_MAP[self.COLOR_SEQUENCE[-1]]
-                self.colorWipe(strip,Color(sequence[0],sequence[1],sequence[2]))
+                self.colorWipe(Color(sequence[0],sequence[1],sequence[2]))
 
-    def startStrip(self)
-        strip = Adafruit_NeoPixel(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ, self.LED_DMA, self.LED_INVERT, self.LED_BRIGHTNESS)
-        strip.begin()
-        colorMap(strip,values)
+    def startStrip(self):
+        self.strip = Adafruit_NeoPixel(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ, self.LED_DMA, self.LED_INVERT,           self.LED_BRIGHTNESS)
+        self.strip.begin()
+
+    def setColorSequence(self, sequence):
+        self.COLOR_SEQUENCE = sequence
+
+        print("HELLO from LIGHT!")
+        print("Color Sequence: ", self.COLOR_SEQUENCE)
