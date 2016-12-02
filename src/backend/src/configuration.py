@@ -18,7 +18,7 @@ class Configuration():
     chunk = 0
     output_binary = False
 
-    def __init__(self, db_row=None, data=None):
+    def __init__(self, base=None, db_row=None, data=None):
         """Constructor
         Parameters
         ----------
@@ -27,18 +27,48 @@ class Configuration():
         data : Json String (optional)
             A Configuration object encoded into a string.
         """
-        if type(data) is dict:
+        if type(data) is dict and base is not None:
             # From json dict
-            if "id" in data: self.id = data["id"]
-            if "is_default" in data: self.is_default = data["is_default"]
-            if "name" in data: self.name = data["name"]
-            if "colors" in data and tone.isValidColorMap(data["colors"]): self.colors = data["colors"]
-            if "trigger_threshold" in data: self.trigger_threshold = data["trigger_threshold"]
-            if "trigger_offset" in data: self.trigger_offset = data["trigger_offset"]
-            if "scaled_max_value" in data: self.scaled_max_value = data["scaled_max_value"]
-            if "output_binary" in data: self.output_binary = data["output_binary"]
-            if "chunk" in data: self.chunk = data["chunk"]
-            if "rate" in data: self.rate = data["rate"]
+            if "id" in data:
+		        self.id = data["id"]
+            else:
+		        self.id = base.id
+            if "is_default" in data:
+                self.is_default = data["is_default"]
+            else:
+                self.is_default = base.is_default
+            if "name" in data:
+                self.name = data["name"]
+            else:
+                self.name = base.name
+            if "colors" in data:
+                self.colors = data["colors"]
+            else:
+                self.colors = self.colors
+            if "trigger_threshold" in data:
+                self.trigger_threshold = data["trigger_threshold"]
+            else:
+                self.trigger_threshold = base.trigger_threshold
+            if "trigger_offset" in data:
+                self.trigger_offset = data["trigger_offset"]
+            else:
+                self.trigger_offset = base.trigger_offset
+            if "scaled_max_value" in data:
+                self.scaled_max_value = data["scaled_max_value"]
+            else:
+                self.scaled_max_value = base.scaled_max_value
+            if "output_binary" in data:
+                self.output_binary = data["output_binary"]
+            else:
+                self.output_binary = base.output_binary
+            if "chunk" in data:
+                self.chunk = data["chunk"]
+            else:
+                self.chunk = base.chunk
+            if "rate" in data:
+                self.rate = data["rate"]
+            else:
+                self.rate = base.rate
         elif type(db_row) is tuple:
             # From database, check the order of arguments on data/schema.sql
             self.id = db_row[0]

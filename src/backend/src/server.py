@@ -120,7 +120,8 @@ class BluetoothServer(Thread):
             if DATA_CONFIG not in data:
                 print("Configuration not received!")
                 return
-            config = Configuration(data[DATA_CONFIG])
+            config = Configuration(base=db.getDefaultConfiguration(),
+                    data=data[DATA_CONFIG])
             if self.callback is not None:
                 self.callback(config)
             db.saveConfiguration(config)

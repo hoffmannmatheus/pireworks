@@ -5,7 +5,7 @@
 CREATE TABLE IF NOT EXISTS configuration ( 
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     is_default INTEGER DEFAULT 0 NOT NULL,
-    name VARCHAR(80) UNIQUE NOT NULL,
+    name VARCHAR(80) NOT NULL, -- UNIQUE!
 	colors TEXT NOT NULL,
 	trigger_threshold INTEGER NOT NULL,
 	trigger_offset INTEGER NOT NULL,
