@@ -126,7 +126,6 @@ public class HomeActivity extends AppCompatActivity {
                 showDisabled();
             }
         }
-
         filter = new IntentFilter();
 
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -220,7 +219,6 @@ public class HomeActivity extends AppCompatActivity {
 
                 if (state == BluetoothAdapter.STATE_ON) {
                     showToast("Enabled");
-
                     showEnabled();
                 }
             }
@@ -228,7 +226,7 @@ public class HomeActivity extends AppCompatActivity {
                 mDeviceList = new ArrayList();
                 mProgressDlg.show();
             }
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+            if (BluetoothDevice.ACTION_FOUND.equals(action) && mBluetoothAdapter.isDiscovering()) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 mDeviceList.add(device);
                 showToast("Found device " + device.getName());

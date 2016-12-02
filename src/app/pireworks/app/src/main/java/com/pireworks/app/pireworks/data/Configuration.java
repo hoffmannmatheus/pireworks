@@ -23,13 +23,6 @@ public class Configuration {
         this.setUserColorMap(userColorMap);
     }
 
-    public Configuration(int threshold, int offset, int intensity){
-        this.setTriggerThreshold(threshold);
-        this.setTriggerOffset(offset);
-        this.setmAmplitudeIntensity(intensity);
-        this.setDefaultColorMap();
-    }
-
     public int getTriggerThreshold(){
         return this.triggerThreshold;
     }
@@ -54,21 +47,26 @@ public class Configuration {
     }
 
     private void setDefaultColorMap(){
-        colorMap.put("C",  "FF0000");
-        colorMap.put("D",  "FFFF00");
-        colorMap.put("E",  "FF00FF");
-        colorMap.put("F",  "FFFFFF");
-        colorMap.put("G",  "00FFFF");
-        colorMap.put("A",  "0000FF");
-        colorMap.put("B",  "FF0FF0");
-
+        colorMap = getDefaultColorMap();
     }
 
     private void setUserColorMap(HashMap<String,String> userColorMap){
         this.colorMap = userColorMap;
     }
 
-    public HashMap<String,String> getColHashMap(){
-        return (HashMap<String, String>) this.colorMap;
+    public Map<String,String> getColHashMap(){
+        return this.colorMap;
+    }
+
+    public static HashMap<String, String> getDefaultColorMap() {
+        HashMap<String, String> defaultMap = new HashMap<String, String>();
+        defaultMap.put("C",  "red");
+        defaultMap.put("D",  "green");
+        defaultMap.put("E",  "blue");
+        defaultMap.put("F",  "purple");
+        defaultMap.put("G",  "teal");
+        defaultMap.put("A",  "aquamarine");
+        defaultMap.put("B",  "indigo");
+        return defaultMap;
     }
 }
