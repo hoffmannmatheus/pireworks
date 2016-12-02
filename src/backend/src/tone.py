@@ -83,9 +83,11 @@ def isValidColorMap(color_map):
     is_valid : bool
         Is this a valid color map?
     """
-    if type(color_map) is not list:
+    if type(color_map) is not dict:
+        print("Not a dict!")
         return False  # Must be a list!
-    if  len(color_map) != getNumberOfOctaves():
+    if  len(color_map) != getNumberOfNotes():
+        print("Invalid number of notes!")
         return False  # Must have 7 items!
     if "C" not in color_map      \
         or "D" not in color_map  \
@@ -94,6 +96,7 @@ def isValidColorMap(color_map):
         or "G" not in color_map  \
         or "A" not in color_map  \
         or "B" not in color_map:
+        print("Should have A B C D E F G!")
         return False  # Must have all 7 notes
     # Otherwise, its good
     return True

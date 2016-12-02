@@ -58,5 +58,4 @@ class LightInput():
     def setColorSequence(self, sequence):
         self.COLOR_SEQUENCE = sequence
 
-        print("HELLO from LIGHT!")
         print("Color Sequence: ", self.COLOR_SEQUENCE)

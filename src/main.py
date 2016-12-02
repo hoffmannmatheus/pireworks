@@ -22,6 +22,7 @@ def setConfigururation(c):
     print("new configuraiton being set...", c.toJson())
     audio.stop()
     time.sleep(3) # let it stop properly
+
     light.setColorSequence(c.getColorsForAllFrequencies())
     audio.configure(
         cutoff_freqs=c.getCutoffFrequenciesAsList(),
@@ -31,7 +32,6 @@ def setConfigururation(c):
     audio.start()
 
 def onNewConfiguration(new_config):
-    print("new saved config", new_config)
     setConfigururation(new_config)
     config = new_config
 
