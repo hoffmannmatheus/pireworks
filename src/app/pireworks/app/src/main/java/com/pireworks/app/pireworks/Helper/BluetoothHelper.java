@@ -12,7 +12,7 @@ import java.io.OutputStream;
  */
 public class BluetoothHelper {
 
-    public void sendMessage(OutputStream mOutputStream, Configuration config){
+    public void sendConfig(OutputStream mOutputStream, Configuration config){
 
         if( mOutputStream !=null){
             /**
@@ -28,13 +28,13 @@ public class BluetoothHelper {
 
 
             JsonObject jsonColors=new JsonObject();
-            jsonColors.addProperty("C",  config.getColHashMap().get("C"));
-            jsonColors.addProperty("D",  config.getColHashMap().get("D"));
-            jsonColors.addProperty("E",  config.getColHashMap().get("E"));
-            jsonColors.addProperty("F",  config.getColHashMap().get("F"));
-            jsonColors.addProperty("G",  config.getColHashMap().get("G"));
-            jsonColors.addProperty("A",  config.getColHashMap().get("A"));
-            jsonColors.addProperty("B",  config.getColHashMap().get("B"));
+            jsonColors.addProperty("C",  config.getColorHashMap().get("C"));
+            jsonColors.addProperty("D",  config.getColorHashMap().get("D"));
+            jsonColors.addProperty("E",  config.getColorHashMap().get("E"));
+            jsonColors.addProperty("F",  config.getColorHashMap().get("F"));
+            jsonColors.addProperty("G",  config.getColorHashMap().get("G"));
+            jsonColors.addProperty("A",  config.getColorHashMap().get("A"));
+            jsonColors.addProperty("B",  config.getColorHashMap().get("B"));
 
             JsonObject jsonConfig=new JsonObject();
             jsonConfig.addProperty("trigger_threshold", config.getTriggerThreshold());
@@ -51,20 +51,21 @@ public class BluetoothHelper {
             }catch(IOException e){
                 e.printStackTrace();
             }
-           // appendMessage("me", jsonMessage);
         }
     }
 
-    public void appendMessage(final String from,final String message){
-       /* if (mDeviceMessagesTextView != null) {
-                        runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                        mDeviceMessagesTextView.append("\n" + from + ": " + message);
-                                    }
-                            });
-                   }*/
+    public void requestConfig(OutputStream mOutputStream){
 
+        if( mOutputStream !=null){
+            JsonObject builder=new JsonObject();
+            builder.addProperty("action","get");
+            String jsonMessage=(new Gson()).toJson(builder);
+
+            try{
+                mOutputStream.write(jsonMessage.getBytes());
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
     }
-
 }

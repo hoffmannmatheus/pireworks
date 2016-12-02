@@ -54,7 +54,7 @@ public class Configuration {
         this.colorMap = userColorMap;
     }
 
-    public Map<String,String> getColHashMap(){
+    public Map<String,String> getColorHashMap(){
         return this.colorMap;
     }
 

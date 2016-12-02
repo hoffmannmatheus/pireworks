@@ -36,30 +36,13 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <Button
-                    android:text="SAVE"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/saveButton"
-                    android:layout_below="@+id/selectH"
-                    android:layout_toEndOf="@+id/triggerThreshold"
-                    android:layout_marginStart="24dp" />
-
-                <Button
-                    android:id="@+id/selectA"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SELECT"
-                    android:layout_alignBaseline="@+id/noteA"
-                    android:layout_alignBottom="@+id/noteA"
-                    android:layout_alignStart="@+id/saveButton"
-                    android:layout_marginStart="30dp" />
 
                 <Button
                     android:id="@+id/selectB"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SELECT"
+                    android:textColor="@color/white"
                     android:layout_below="@+id/selectA"
                     android:layout_alignStart="@+id/selectA"
                     android:layout_alignEnd="@+id/selectA" />
@@ -69,6 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SELECT"
+                    android:textColor="@color/white"
                     android:layout_below="@+id/selectB"
                     android:layout_alignStart="@+id/selectB" />
 
@@ -77,6 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SELECT"
+                    android:textColor="@color/white"
                     android:layout_below="@+id/selectC"
                     android:layout_alignStart="@+id/selectC" />
 
@@ -85,6 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SELECT"
+                    android:textColor="@color/white"
                     android:layout_below="@+id/selectD"
                     android:layout_alignStart="@+id/selectD" />
 
@@ -93,6 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SELECT"
+                    android:textColor="@color/white"
                     android:layout_below="@+id/selectE"
                     android:layout_alignStart="@+id/selectE" />
 
@@ -101,25 +88,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SELECT"
+                    android:textColor="@color/white"
                     android:layout_below="@+id/selectF"
                     android:layout_alignStart="@+id/selectF" />
-
-                <TextView
-                    android:id="@+id/noteH"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:text="Note H"
-                    android:layout_below="@+id/selectG"
-                    android:layout_alignParentStart="true" />
-
-                <Button
-                    android:id="@+id/selectH"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SELECT"
-                    android:layout_below="@+id/selectG"
-                    android:layout_alignStart="@+id/selectG" />
 
                 <EditText
                     android:layout_width="wrap_content"
@@ -130,7 +101,6 @@
                     android:textSize="14sp"
                     android:text="0000"
                     android:textAlignment="center"
-                    android:layout_below="@+id/pireworks_device_name"
                     android:layout_alignStart="@+id/selectA"
                     android:layout_alignEnd="@+id/selectA" />
 
@@ -159,16 +129,6 @@
                     android:layout_below="@+id/intensityInput"
                     android:layout_alignStart="@+id/intensityInput"
                     android:layout_alignEnd="@+id/intensityInput" />
-
-                <TextView
-                    android:id="@+id/noteA"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:text="Note A"
-                    android:layout_below="@+id/offsetInput"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="17dp" />
 
                 <TextView
                     android:text="Trigger Threshold"
@@ -258,6 +218,35 @@
                     android:layout_alignBaseline="@+id/selectG"
                     android:layout_alignBottom="@+id/selectG"
                     android:layout_alignParentStart="true" />
+
+                <Button
+                    android:id="@+id/selectA"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:text="SELECT"
+                    android:layout_alignBaseline="@+id/noteA"
+                    android:layout_alignBottom="@+id/noteA"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="13dp" />
+
+                <Button
+                    android:text="SAVE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/saveButton"
+                    android:layout_below="@+id/selectG"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:id="@+id/noteA"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:text="Note A"
+                    android:layout_below="@+id/offsetInput"
+                    android:layout_alignParentStart="true" />
+
             </RelativeLayout>
 
         </ScrollView>
