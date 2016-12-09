@@ -34,8 +34,8 @@ REPLACE INTO configuration (
 	1,					-- is_default
 	"default",			-- name
 	"red,green,blue,teal,purple,aquamarine,indigo",	-- colors, should be comma separated values, in the correct TONE order (C, D, E, F, G, A, B) 
-	150000,				-- trigger_threshold
-	100,				-- trigger_offset
+	200000,				-- trigger_threshold
+	300, 				-- trigger_offset
 	255,				-- scaled_max_value
 	1,					-- output_binary
 	8192,				-- chunk
