@@ -37,7 +37,7 @@ class LightInput():
         """Wipe color across display a pixel at a time."""
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, color)
-            self.strip.show()
+        self.strip.show()
 
     def colorMap(self, values):
         # Map output to colors
