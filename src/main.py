@@ -4,7 +4,7 @@ import sys
 import time
 
 sys.path.append('audio/src')
-sys.path.append('audio/test')
+sys.path.append('light/src')
 sys.path.append('backend/src')
 
 from configuration import Configuration

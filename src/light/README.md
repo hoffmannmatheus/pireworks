@@ -4,7 +4,7 @@
 - RPi GPIO
   * Features
 - GPIO PWM
-- [RGB_LED_Strip](https://github.com/hoffmannmatheus/pireworks/blob/master/src/light/RGB_LED_Strip.md)
+- [RGB_LED_Strip](https://github.com/hoffmannmatheus/pireworks/blob/master/src/light/test/RGB_LED_Strip.md)
 
 ## Overview
 
